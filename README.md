@@ -1,3 +1,6 @@
+
+[Relatório](https://github.com/otavio-f/LEDA-2024.2/blob/master/LEDA%20DOC.pdf)
+
 Para rodar o projeto
 
 Forma 1:
