@@ -7,7 +7,7 @@ Forma 1:
 * Os arquivos csv de saida estarão na pasta `output`.
 
 Forma 2:
-* Baixe o arquivo da seção *releases*;
+* Baixe o arquivo `czech_road_accidents-1.0-0.jar` da seção *releases*;
 * Crie uma pasta `input` na mesma pasta do arquivo jar;
 * Copie os arquivos csv para a pasta `input`;
 * Execute o arquivo jar na linha de comando: `java -jar czech_road_accidents-1.0-0.jar`
