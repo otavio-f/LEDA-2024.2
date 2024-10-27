@@ -80,15 +80,11 @@ public class Transformer {
             logger.fine(String.format("Reading progress: %.2f %%", 100*p));
         });
 
-        /*
-        if(data[0] instanceof Integer) { // BUG: (data instanceof Integer[]) is always false
-            logger.info("Counting-Sort");
-            applySort(
-                (arr)-> new CountingSort(arr), st, data, String.format(outputExp, "countingSort"),
+//        logger.info("Counting-Sort");
+//        applySort(
+//                (arr)-> new CountingSort(arr), st, data, String.format(outputExp, "countingSort"),
+//                order);
                 // BUG: Fails to cast Sorter<Integer> to Sorter<T>, even if T is Integer
-                order);
-        }
-        */
 
         /*
         Heap-Sort
