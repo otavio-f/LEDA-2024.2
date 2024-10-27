@@ -5,15 +5,27 @@ public interface DynamicList<T extends Comparable<? super T>> {
 
     public T pop(T item);//TODO: talvez remove? ou removeAt(index)?
 
+    public T pop(int index); //TODO: talvez remove sem retorno?
+
+    public void remove(int index);
+
+    public T getAt(int index);
+
     public T predecessor(T item);
 
     public T sucessor(T item);
 
     public int size();
 
+    public boolean isEmpty();
+
     public T search(T item);
 
     public T minimum();
 
     public T maximum();
+
+    public T[] toArray();
+
+    public T[] toArray(int lo, int hi);
 }
