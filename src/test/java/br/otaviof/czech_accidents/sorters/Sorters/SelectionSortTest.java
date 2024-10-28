@@ -1,5 +1,6 @@
-package Sorters;
+package br.otaviof.czech_accidents.sorters.Sorters;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,27 +11,28 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import br.otaviof.czech_accidents.sorters.InsertionSort;
+import br.otaviof.czech_accidents.sorters.SelectionSort;
 
-class InsertionSortTest {
+class SelectionSortTest {
 
     @Test
     void testOrder() {
         Integer sample[] = { 1, 5, 3, 4, 2, 5 };
         int correctOrder[] = { 0, 4, 2, 3, 1, 5 };
         int altOrder[] = { 0, 4, 2, 3, 5, 1 };
-        InsertionSort<Integer> sorter = new InsertionSort<>(sample);
+        SelectionSort<Integer> sorter = new SelectionSort<>(sample);
 
         int order[] = sorter.sort();
-
-        assertTrue(Arrays.equals(order, correctOrder) || Arrays.equals(order,
-                altOrder)); // Não preserva ordem, tanto faz
+        assertArrayEquals(order, correctOrder);
+        assertTrue(Arrays.equals(order, correctOrder) || Arrays.equals(order, altOrder)); // Não preserva ordem, tanto
+                                                                                          // faz
     }
 
     @Test
     void testSort() {
         Integer sample[] = genIntArray(1_000, -10_000_000, 10_000_000);
-        InsertionSort<Integer> sorter = new InsertionSort<>(sample);
+        // 241s pra ordenar 100_000 elementos
+        SelectionSort<Integer> sorter = new SelectionSort<>(sample);
 
         sorter.sort();
         assertTrue(isOrdered(sample));

@@ -1,4 +1,4 @@
-package Sorters;
+package br.otaviof.czech_accidents.sorters.Sorters;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
