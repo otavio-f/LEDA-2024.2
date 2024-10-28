@@ -1,11 +1,11 @@
 package br.otaviof.czech_accidents.dataStructures;
 
-public interface DynamicList<T extends Comparable<? super T>> {
+public interface List<T extends Comparable<? super T>> {
     public void insert(T item);
 
     public void insert(T item, int index);
 
-    public T pop(T item); // TODO: talvez remove? ou removeAt(index)?
+    public T remove(T item); // TODO: talvez remove? ou removeAt(index)?
 
     public T pop(int index); // TODO: talvez remove sem retorno?
 
