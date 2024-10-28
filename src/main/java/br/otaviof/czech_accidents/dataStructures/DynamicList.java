@@ -9,10 +9,6 @@ public interface DynamicList<T extends Comparable<? super T>> {
 
     public void swap(int i, int j); // TODO: Util, talvez remover?
 
-    public void remove(int index);
-
-    public T getAt(int index);
-
     public T predecessor(T item);
 
     public T sucessor(T item);
@@ -22,6 +18,8 @@ public interface DynamicList<T extends Comparable<? super T>> {
     public boolean isEmpty();
 
     public T search(T item);
+
+    public T getAt(int index);
 
     public T minimum();
 
