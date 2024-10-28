@@ -27,5 +27,4 @@ public interface DynamicList<T extends Comparable<? super T>> {
 
     public T[] toArray();
 
-    public T[] toArray(int lo, int hi);
 }
