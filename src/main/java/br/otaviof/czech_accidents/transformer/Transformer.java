@@ -15,7 +15,16 @@ public class Transformer {
         ASCENDING, DESCENDING
     }
 
+    /**
+     * Define uma interface funcional para criar um método de ordenação
+     * @param <T> Um tipo comparável para ser ordenado
+     */
     private interface SorterCreator<T extends Comparable<? super T>> {
+        /**
+         * Cria um método de ordenação sobre com um array
+         * @param arr Um array de elementos ordenáveis
+         * @return Um método de ordenação
+         */
         public Sorter<T> create(T[] arr);
     }
 
@@ -31,6 +40,14 @@ public class Transformer {
         return thread;
     }
 
+    /**
+     * Aplica um filtro sobre uma coluna de um arquivo separado por vírgulas
+     * @param input O arquivo de entrada
+     * @param output O arquivo de saída
+     * @param column A coluna a ser filtrada
+     * @param filter O filtro a ser aplicado sobre a coluna
+     * @throws IOException Se ocorrer algum erro na leitura ou escrita do arquivo
+     */
     public static void filterByColumn(File input, File output, String column, Streamer.Filter filter) throws IOException {
         logger.info(String.format("Reading file \"%s\"", input));
         final Streamer st = new Streamer(input);
@@ -45,6 +62,10 @@ public class Transformer {
         logger.info(String.format("Done. Written %d lines", writtenLines));
     }
 
+    /**
+     * Inverte a ordem de um array de ordenação
+     * @param order Um array de ordenação que indica a posição de elementos
+     */
     private static void reverseOrder(int[] order) {
         int temp;
         for(int i=0; i<order.length/2; i++) {
@@ -54,6 +75,16 @@ public class Transformer {
         }
     }
 
+    /**
+     * Aplica um método de ordenação sobre um array
+     * @param creator Um criador de métodos de ordenação
+     * @param st O leitor de arquivos
+     * @param originalData O conjunto de dados
+     * @param output O arquivo de destino
+     * @param order Ordem de ordenação, crescente ou decrescente
+     * @param <T> Uma classe comparável
+     * @throws IOException Se ocorrer erro de leitura ou escrita de arquivo
+     */
     private static <T extends Comparable<? super T>> void applySort(SorterCreator<T> creator, Streamer st, T[] originalData, File output, SortOrder order) throws IOException {
         System.gc();
         T[] data = Arrays.copyOf(originalData, originalData.length);
@@ -72,6 +103,18 @@ public class Transformer {
         });
     }
 
+    /**
+     * Ordena um arquivo csv por uma coluna usando diferentes métodos de ordenação
+     *
+     * @param input O arquivo csv
+     * @param outputDir A pasta de saída
+     * @param outputExp A expressão que define o nome do arquivo
+     * @param column A coluna pela qual o arquivo vai ser ordenado
+     * @param converter Um conversor de tipos
+     * @param order A ordem de ordenação, crescente ou decrescente
+     * @param <T> Um tipo comparável
+     * @throws IOException Se ocorrer erro de leitura ou escrita
+     */
     public static <T extends Comparable<? super T>> void sortByColumn(File input, File outputDir, String outputExp, String column, Streamer.Converter<T> converter, Transformer.SortOrder order) throws IOException {
         logger.info(String.format("Reading file \"%s\"", input));
 
