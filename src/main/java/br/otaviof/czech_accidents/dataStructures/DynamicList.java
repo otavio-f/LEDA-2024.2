@@ -170,6 +170,7 @@ public class DynamicList<T extends Comparable<? super T>> implements List<T> {
     public List<T> copy() {
         DynamicList<T> result = new DynamicList<>();
 
+        result.data = GenericsUtils.createArrayOfSize(this.insertAt);
         result.insertAt = this.insertAt;
         if (this.insertAt >= 0)
             System.arraycopy(this.data, 0, result.data, 0, this.insertAt);
