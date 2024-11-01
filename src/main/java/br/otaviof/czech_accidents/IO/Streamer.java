@@ -7,44 +7,54 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// TODO: Extrair funcionalidade de conversão para Converter
+// TODO: Substituir criação de array T[] por GenericUtils.createArrayOfSize()
+// TODO: Talvez juntar nome da coluna com filter??
+
+/**
+ * @author otavio-f
+ * Classe de abertura de arquivos csv em disco
+ */
 public class Streamer {
     /**
-     * Functional interface that accepts or rejects an item
+     * Interface funcional de filtragem de strings
      */
     public interface Filter {
         /**
-         * Filters items according to its condition
-         *
-         * @param item Item to be filtered
-         * @return true if the item is accepted by the filter, otherwise false
+         * Filtra itens de acordo com uma condição
+         * @param item String a ser submetida a filtragem
+         * @return true se o item é aceito pelo filtro, senão false
          */
         public boolean accepts(String item);
     }
 
     /**
-     * Functional interface to convert cells to types
-     * @param <T> A comparable type
+     * Interface funcional de conversão de tipos
+     * @param <T> Um tipo comparável
      */
     public interface Converter<T extends Comparable<? super T>> {
         /**
-         * Converts a string cell to a suitable type
-         * @param item the cell to be converted
-         * @return the cell converted to the appropriate type
+         * Converte uma célula string
+         * @param item a célula a ser convertida
+         * @return A célula convertida para o tipo correto
          */
         public T convert(String item);
     }
 
     private static Logger logger = Logger.getLogger("CSVStreamer");
 
-    final private static Pattern PATTERN = Pattern.compile(
-        "(?:\\s*(?:\\\"([^\\\"]*)\\\"|([^,]*))\\s*,?)+?", // Matches any cell, found on
-        // https://regex101.com/library/eH1zP0
+    /**
+     * Padrão de uma célula de um arquivo separado por vírgulas
+     * Encontrado em <a href="https://regex101.com/library/eH1zP0">...</a>
+     */
+    final private static Pattern PATTERN = Pattern.compile( //TODO: Renomeie isso
+        "(?:\\s*(?:\\\"([^\\\"]*)\\\"|([^,]*))\\s*,?)+?",
         Pattern.CASE_INSENSITIVE);
 
     private final File input;
-    /** Column amount */
+    /** Quantidade de colunas */
     public final int columnCount;
-    /** Line amount, including headers */
+    /** Quantidade de linhas incluindo cabeçalhos */
     public final int lineCount;
 
     public Streamer(File file) throws IOException {
@@ -69,10 +79,9 @@ public class Streamer {
     }
 
     /**
-     * Retrieves the matching column from the regular expression matcher
-     *
-     * @param matcher The object containing the regular expression matching data
-     * @return The matching column or null if there's no match
+     * Obtém a coluna através de uma expressão regular
+     * @param matcher O objeto que contém o <i>match</i> da expressão regular
+     * @return A coluna ou <i>null</i> se não há <i>match</i>
      */
     private String findMatch(Matcher matcher) {
         if (!matcher.find())
@@ -85,27 +94,29 @@ public class Streamer {
     }
 
     /**
-     * Splits a line of text
-     *
-     * @param line A comma-separated line
-     * @return A line separated by columns or null if failed to parse the amount of
-     *         columns expected
+     * Divide uma linha de texto em colunas
+     * @param line Uma linha separada por vírgulas
+     * @param cellCount A quantidade de colunas esperadas
+     * @return Uma linha separada por colunas.
+     * Se houve falha em obter o número de colunas esperado, células serão preenchidas com string vazia
      */
     private String[] getCells(String line, int cellCount) {
         Matcher matcher = PATTERN.matcher(line);
         String[] result = new String[cellCount];
         for (int i = 0; i < cellCount; i++) {
             String match = findMatch(matcher);
-            // TODO: maybe replace missing cells with empty spaces?
             result[i] = (match==null) ? "" : match;
-//            if (match == null) {
-//                return null;
-//            }
-//            result[i] = match;
         }
         return result;
     }
 
+    /**
+     * Encontra o índice da coluna pelo nome
+     * @param header A linha de cabeçalhos
+     * @param column O nome da coluna
+     * @return O índice da coluna
+     * @throws IllegalArgumentException se a coluna não foi encontrada
+     */
     private int findColumnIndex(String[] header, String column) {
         for(int i=0; i<header.length; i++)
             if(header[i].equals(column))
@@ -113,6 +124,15 @@ public class Streamer {
         throw new IllegalArgumentException(String.format("Column %s", column));
     }
 
+    /**
+     * Obtém a coluna pelo nome
+     * @param name O nome da coluna
+     * @param convertFunc A função conversora de tipos
+     * @param trackerFunc O objeto observador de progresso
+     * @return Um array de tipo
+     * @param <T> Um tipo genérico ordenável
+     * @throws IOException se ocorreu algum erro de leitura de arquivo
+     */
     public <T extends Comparable<? super T>> T[] getColumn(String name, Converter<T> convertFunc, ProgressTracker.Tracker trackerFunc) throws IOException {
         FileReader fr = new FileReader(this.input);
         BufferedReader br = new BufferedReader(fr);
@@ -138,12 +158,21 @@ public class Streamer {
         return result;
     }
 
+    /**
+     * Filtra as linhas de um arquivo
+     * @param output O arquivo de saída. Se o arquivo já existe em disco, ele será deletado
+     * @param column A coluna a ser filtrada
+     * @param filterFunc A função filtradora de células
+     * @param trackerFunc O objeto que mantém progresso da operação
+     * @return A quantidade de linhas filtradas
+     * @throws IOException Se ocorreu algum erro de leitura ou escrita
+     */
     public int filterToFile(File output, String column, Filter filterFunc, ProgressTracker.Tracker trackerFunc) throws IOException {
         FileReader fr = new FileReader(this.input);
         BufferedReader br = new BufferedReader(fr);
 
         // Delete file if exists
-        output.delete();
+        output.delete(); // TODO: falha em deletar o arquivo deve gerar um erro
 
         // initialize write process
         FileWriter fw = new FileWriter(output);
@@ -183,6 +212,13 @@ public class Streamer {
         return writtenCount;
     }
 
+    /**
+     * Reordena as linhas de um arquivo e escreve em disco
+     * @param output O arquivo de saída. Se o arquivo já existe em disco, ele será deletado
+     * @param newOrder O array de ordenação
+     * @param trackerFunc A função de manter progresso
+     * @throws IOException Se ocorrer algum erro de leitura ou escrita
+     */
     public void writeReordered(File output, int[] newOrder, ProgressTracker.Tracker trackerFunc) throws IOException {
         FileReader fr = new FileReader(this.input);
         BufferedReader br = new BufferedReader(fr);
@@ -206,7 +242,7 @@ public class Streamer {
         fr.close();
 
         // write lines to file
-        output.delete();
+        output.delete(); // TODO: falha em deletar o arquivo deve gerar um erro
         FileWriter fw = new FileWriter(output);
         BufferedWriter bw = new BufferedWriter(fw);
 

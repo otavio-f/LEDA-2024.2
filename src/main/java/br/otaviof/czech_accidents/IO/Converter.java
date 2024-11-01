@@ -2,6 +2,7 @@ package br.otaviof.czech_accidents.IO;
 
 // TODO: Colocar substituir Comparable<T> por Comparable<? super T>
 // TODO: Substituir criação de array T[] por GenericUtils.createArrayOfSize()
+// TODO: Talvez mover para transformer?
 
 /**
  * @author otavio-f
