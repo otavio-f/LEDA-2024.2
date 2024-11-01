@@ -3,6 +3,8 @@ package br.otaviof.czech_accidents.dataStructures;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,59 +12,95 @@ import static org.junit.jupiter.api.Assertions.*;
 class DynamicListTest {
 
     List<Integer> list;
-    Random rng;
+    Random rng = new Random();
 
     @BeforeEach
     void setup() {
-        list = null;
-        rng = new Random();
+        list = new DynamicList<Integer>();
     }
 
     @Test
-    void testInsert() {
-        list.insert(3);
-        list.insert(6);
+    void testAppend() {
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
 
-        assertEquals(2, list.size());
-        assertArrayEquals(new Integer[] {3, 6}, list.toArray());
+        assertEquals(2, list.getSize());
     }
 
     @Test
-    void testInsertAtStart() {
-        list.insert(3);
-        list.insert(6);
+    void testInsertAt() {
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
 
-        list.insert(1, 0);
+        list.insertAt(1, 0);
 
-        assertEquals(3, list.size());
-        assertArrayEquals(new Integer[] {0, 3, 6}, list.toArray());
+        assertEquals(5, list.getSize());
+        assertEquals(1, list.getAt(0));
     }
 
     @Test
-    void testPopItem() {
-        list.insert(3);
-        list.insert(6);
+    void testInsertAtEnd() {
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
 
-        Integer item = list.remove(3);
+        int sz = list.getSize();
+        Integer k = rng.nextInt();
+        list.insertAt(k, sz);
 
-        assertEquals(1, list.size());
-        assertEquals(3, item);
+        assertEquals(5, list.getSize());
+        assertEquals(k, list.getAt(sz));
     }
 
     @Test
-    void testPopIndex() {
-        list.insert(3);
-        list.insert(6);
+    void testInsertAtInvalidThrows() {
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.insertAt(rng.nextInt(), 999);
+        });
+
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.insertAt(rng.nextInt(), -999);
+        });
+    }
+
+    @Test
+    void testPop() {
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
+        Integer k = rng.nextInt();
+        list.insertAt(k, 0);
 
         Integer item = list.pop(0);
-        assertEquals(1, list.size());
-        assertEquals(3, item);
+        assertEquals(k, item);
+
+        assertEquals(2, list.getSize());
+    }
+
+    @Test
+    void testPopOnEmptyThrows() {
+        assertThrowsExactly(EmptyException.class, () -> {
+           list.pop(0);
+        });
+    }
+
+    @Test
+    void testPopInvalidIndexThrows() {
+        list.append(rng.nextInt());
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.pop(-1);
+        });
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.pop(9999);
+        });
     }
 
     @Test
     void swap() {
-        list.insert(3);
-        list.insert(6);
+        list.append(3);
+        list.append(6);
 
         list.swap(0, 1);
 
@@ -70,110 +108,193 @@ class DynamicListTest {
     }
 
     @Test
-    void testPredecessor() {
-        list.insert(3);
-        list.insert(6);
-
-        assertEquals(3, list.predecessor(6));
-        assertNull(list.predecessor(3));
+    void swapOnEmptyThrows() {
+        assertThrowsExactly(EmptyException.class, () -> {
+            list.swap(0, 1);
+        });
     }
 
     @Test
-    void testSucessor() {
-        list.insert(3);
-        list.insert(6);
+    void swapInvalidThrows() {
+        list.append(3);
+        list.append(6);
 
-        assertEquals(6, list.predecessor(3));
-        assertNull(list.sucessor(6));
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.swap(-1, 333);
+        });
+
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.swap(999, -1);
+        });
     }
 
     @Test
-    void testSize() {
-        list.insert(3);
-        list.insert(6);
-        list.insert(9);
-        list.insert(2);
-        list.insert(4);
-        list.insert(8);
-        list.remove(3);
-        list.remove(8);
+    void testGetSize() {
+        assertEquals(0, list.getSize());
 
-        assertEquals(6, list.size());
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
+        assertEquals(6, list.getSize());
+
+        list.pop(0);
+        list.pop(0);
+        assertEquals(4, list.getSize());
     }
 
     @Test
     void testIsEmpty() {
-        list.insert(3);
-        list.insert(6);
-        list.insert(2);
-        list.insert(4);
+        assertTrue(list.isEmpty());
+
+        list.append(rng.nextInt());
 
         assertFalse(list.isEmpty());
 
-        list.pop(0);
-        list.pop(0);
-        list.pop(0);
         list.pop(0);
 
         assertTrue(list.isEmpty());
     }
 
     @Test
-    void testSearch() {
-        list.insert(3);
-        list.insert(6);
-        list.insert(2);
-        list.insert(4);
+    void testContains() {
+        list.append(3);
+        list.append(6);
+        list.append(2);
+        list.append(4);
 
-        assertEquals(3, list.search(3));
+        assertEquals(0, list.indexOf(3));
 
-        list.remove(3);
-        list.remove(2);
+        list.pop(0);
 
-        assertNull(list.search(3));
+        assertFalse(list.contains(3));
     }
 
     @Test
     void testGetAt() {
-        list.insert(3);
-        list.insert(6);
-        list.insert(2);
-        list.insert(4);
+        list.append(3);
+        list.append(6);
+        list.append(2);
+        list.append(4);
 
         assertEquals(3, list.getAt(0));
+        assertEquals(6, list.getAt(1));
+        assertEquals(2, list.getAt(2));
+        assertEquals(4, list.getAt(3));
+    }
 
-        list.remove(3);
-        list.remove(2);
+    @Test
+    void testGetAtInvalidThrows() {
+        list.append(rng.nextInt());
+        list.append(rng.nextInt());
 
-        assertEquals(6, list.getAt(0));
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.getAt(333);
+        });
+
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.getAt(-1);
+        });
+    }
+
+    @Test
+    void testGetAtEmptyThrows() {
+        assertThrowsExactly(EmptyException.class, () -> {
+            list.getAt(0);
+        });
+    }
+
+    @Test
+    void testIndexOf() {
+        list.append(rng.nextInt(10));
+        list.append(rng.nextInt(10));
+        list.append(rng.nextInt(10));
+        list.append(rng.nextInt(10));
+        list.append(100);
+
+        assertEquals(4, list.indexOf(100));
+    }
+
+    @Test
+    void testIndexOfNonExistant() {
+        list.append(rng.nextInt(10));
+        list.append(rng.nextInt(10));
+        list.append(rng.nextInt(10));
+        list.append(rng.nextInt(10));
+        list.append(100);
+        list.pop(4);
+
+        assertEquals(-1, list.indexOf(100));
     }
 
     @Test
     void testMinimum() {
-        list.insert(3);
-        list.insert(6);
-        list.insert(2);
-        list.insert(4);
+        list.append(3);
+        list.append(6);
+        list.append(2);
+        list.append(4);
 
         assertEquals(2, list.minimum());
     }
 
     @Test
+    void testMinimumOnEmptyThrows() {
+        assertThrowsExactly(EmptyException.class, () -> {
+            list.minimum();
+        });
+    }
+
+    @Test
     void testMaximum() {
-        list.insert(3);
-        list.insert(16);
-        list.insert(2);
-        list.insert(4);
+        list.append(3);
+        list.append(16);
+        list.append(2);
+        list.append(4);
 
         assertEquals(16, list.maximum());
     }
 
     @Test
+    void testMaximumOnEmptyThrows() {
+        assertThrowsExactly(EmptyException.class, () -> {
+            list.maximum();
+        });
+    }
+
+    @Test
     void testToArray() {
-        list.insert(30);
-        list.insert(96);
-        list.insert(1);
+        assertArrayEquals(new Integer[] {}, list.toArray());
+
+        list.append(30);
+        list.append(96);
+        list.append(1);
 
         assertArrayEquals(new Integer[] {30, 96, 1}, list.toArray());
+    }
+
+    @Test
+    void testIterator() {
+        list.append(1);
+        list.append(2);
+        list.append(3);
+
+        Iterator<Integer> it = list.getIterator();
+
+        assertEquals(1, it.next());
+        assertEquals(2, it.next());
+        assertEquals(3, it.next());
+
+        assertThrowsExactly(NoSuchElementException.class, () -> {
+            it.next();
+        });
+    }
+
+    @Test
+    void testIteratorOnEmptyThrows() {
+        assertThrowsExactly(EmptyException.class, () -> {
+            list.getIterator();
+        });
     }
 }
