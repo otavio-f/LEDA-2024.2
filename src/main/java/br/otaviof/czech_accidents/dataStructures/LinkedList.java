@@ -1,16 +1,17 @@
 package br.otaviof.czech_accidents.dataStructures;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author otavio-f
- * Implementação de lista encadeada
+ * Implementação de lista encadeada usando nodos sentinelas
  * @param <T>
  */
 public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     /**
-     * Nó de uma lista encadeada
+     * Nodo de uma lista encadeada
      * @param <T>
      */
     private static class Node<T> {
@@ -22,94 +23,32 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
             this.data = data;
             this.next = null;
         }
-
-        public T getData() {
-            return data;
-        }
-
-        public Node<T> getNext() {
-            return next;
-        }
-
-        public void setNext(Node<T> next) {
-            this.next = next;
-        }
     }
 
-    Node<T> head;
+    private final Node<T> head;
+    private final Node<T> tail;
 
     public LinkedList() {
-        this.head = null;
+        this.head = new Node<T>(null);
+        this.tail = new Node<T>(null);
+        this.head.next = this.tail;
     }
 
-    private Node<T> getTail() {
-        if(this.isEmpty())
-            return null;
-        Node<T> node = this.head;
-        while(node.getNext() != null)
-            node = node.getNext();
-        return node;
-    }
-
-    @Override
-    public void append(T item) {
-        final Node<T> node = new Node<T>(item);
-        final Node<T> last = this.getTail();
-        if(last == null)
-            this.head = node;
-        else
-            last.setNext(node);
-    }
-
-    @Override
-    public void insertAt(T item, int index) {
-    }
-
-    @Override
-    public T pop(int index) {
-        return null;
-    }
-
-    @Override
-    public void swap(int i, int j) {
+    /**
+     * Calcula qual nodo está na posição
+     * @param index A posição do nodo
+     * @return O nodo
+     * @throws EmptyException se a lista está vazia
+     * @throws IndexOutOfBoundsException se a posição é inválida
+     */
+    private Node<T> getNodeAt(int index) {
         if(this.isEmpty())
             throw new EmptyException();
-        if(i>=this.getSize() || j>=this.getSize())
-            throw new IndexOutOfBoundsException();
-
-        // proximo de <i-1> vira <j>, se <i> era cabeca entao <j> vira cabeca
-        // proximo de <j-1> vira <i>, se <j> era cabeca entao <i> vira cabeca
-        // proximo de <i> vira <j+1>
-        // proximo de <j> vira <i+1>
-    }
-
-    @Override
-    public int getSize() {
-        int count = 0;
-        Node<T> node = this.head;
-        while(node != null) {
-            node = node.getNext();
-            count++;
-        }
-        return count;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return (this.head == null);
-    }
-
-    @Override
-    public boolean contains(T item) {
-        return false;
-    }
-
-    private Node<T> getNodeAt(int index) {
-        Node<T> result = this.head;
+        Node<T> result = this.head.next;
         while(index > 0) {
-            if(result.getNext() == null)
+            if(result == this.tail)
                 throw new IndexOutOfBoundsException();
-            result = result.getNext();
+            result = result.next;
             index--;
         }
 
@@ -117,8 +56,107 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
     }
 
     @Override
-    public T getAt(int index) {
+    public void append(T item) {
+        final Node<T> node = new Node<T>(item);
+        Node<T> last = this.head;
+        while(last.next != this.tail)
+            last = last.next;
+
+        node.next = this.tail;
+        last.next = node;
+    }
+
+    @Override
+    public void insertAt(T item, int index) {
+        Node<T> before = this.getNodeAt(index-1);
+        Node<T> node = new Node<>(item);
+        node.next = before.next;
+        before.next = node;
+    }
+
+//    @Override
+//    public void insertAt(T item, int index) {
+//        Node<T> before = this.head;
+//        index--;
+//        while(index > 0) {
+//            before = before.next;
+//            if(before.next == this.tail)
+//                throw new IndexOutOfBoundsException();
+//            index--;
+//        }
+//        Node<T> node = new Node<>(item);
+//        node.next = before.next;
+//        before.next = node;
+//    }
+
+    @Override
+    public T pop(int index) {
+        if(this.isEmpty())
+            throw new EmptyException();
+
         return null;
+    }
+
+    @Override
+    public void swap(int i, int j) {
+        if(this.isEmpty())
+            throw new EmptyException();
+        if(i==j) // nao faz nada se forem iguais
+            return;
+        if(j<i) { // menor indice sempre vai ser <i>
+            int temp = i;
+            i = j;
+            j = temp;
+        }
+        Node<T> temp = this.head;
+
+        // 1a forma
+        /*
+         * caminha ate <i->, armazena <i> e <i+>;
+         * caminha ate <j->, armazena <j> e <j+>;
+
+         * proximo de <i-> vira <j>
+         * proximo de <j-> vira <i>
+
+         * proximo de <j> vira <i+>
+         * proximo de <i> vira <j+>
+        */
+
+        // 2a forma
+        /*
+         * Encontra <i-> e armazena
+         * Encontra <j-> e armazena
+         * proximo de <i-> vira <j>, se <i> era cabeca entao <j> vira cabeca
+         * proximo de <j-> vira <i>, se <j> era cabeca entao <i> vira cabeca
+         * proximo de <i> vira <j+>
+         * proximo de <j> vira <i+>
+         */
+    }
+
+    @Override
+    public int getSize() {
+        int count = 0;
+        Node<T> node = this.head.next;
+        while(node != this.tail) {
+            node = node.next;
+            count++;
+        }
+        return count;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return (this.head.next == this.tail);
+    }
+
+    @Override
+    public boolean contains(T item) {
+        return false;
+    }
+
+    @Override
+    public T getAt(int index) {
+        return this.getNodeAt(index).data;
     }
 
     @Override
@@ -148,6 +186,25 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     @Override
     public Iterator<T> getIterator() {
-        return null;
+        if(this.isEmpty())
+            throw new EmptyException();
+
+        return new Iterator<T>() {
+            Node<T> node = head;
+            @Override
+            public boolean hasNext() {
+                return (node != null);
+            }
+
+            @Override
+            public T next() {
+                if(!this.hasNext())
+                    throw new NoSuchElementException();
+
+                final T item = node.data;
+                node = node.next;
+                return item;
+            }
+        };
     }
 }
