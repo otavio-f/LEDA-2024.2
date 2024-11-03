@@ -2,6 +2,7 @@ package br.otaviof.czech_accidents.dataStructures;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * @author otavio-f
@@ -157,6 +158,12 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     @Override
     public boolean contains(T item) {
+        Node<T> node = this.head.next;
+        while(node != this.tail) {
+            if(Objects.equals(item, node.data))
+                return true;
+            node = node.next;
+        }
         return false;
     }
 

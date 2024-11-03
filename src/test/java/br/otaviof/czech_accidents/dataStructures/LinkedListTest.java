@@ -166,6 +166,7 @@ class LinkedListTest {
         list.append(4);
 
         assertEquals(0, list.indexOf(3));
+        assertTrue(list.contains(3));
 
         list.pop(0);
 
