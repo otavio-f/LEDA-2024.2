@@ -87,8 +87,20 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
     public T pop(int index) {
         if(this.isEmpty())
             throw new EmptyException();
+        if(index < 0)
+            throw new IndexOutOfBoundsException();
 
-        return null;
+        Node<T> before = this.head;
+        while(index > 0) {
+            if(before == this.tail)
+                throw new IndexOutOfBoundsException();
+            before = before.next;
+            index--;
+        }
+
+        Node<T> result = before.next;
+        before.next = result.next;
+        return result.data;
     }
 
     @Override
