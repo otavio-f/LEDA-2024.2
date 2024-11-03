@@ -68,26 +68,20 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     @Override
     public void insertAt(T item, int index) {
-        Node<T> before = this.getNodeAt(index-1);
+        if(index < 0)
+            throw new IndexOutOfBoundsException();
+
+        Node<T> before = this.head;
+        while(index > 0) {
+            if(before == this.tail)
+                throw new IndexOutOfBoundsException();
+            before = before.next;
+            index--;
+        }
         Node<T> node = new Node<>(item);
         node.next = before.next;
         before.next = node;
     }
-
-//    @Override
-//    public void insertAt(T item, int index) {
-//        Node<T> before = this.head;
-//        index--;
-//        while(index > 0) {
-//            before = before.next;
-//            if(before.next == this.tail)
-//                throw new IndexOutOfBoundsException();
-//            index--;
-//        }
-//        Node<T> node = new Node<>(item);
-//        node.next = before.next;
-//        before.next = node;
-//    }
 
     @Override
     public T pop(int index) {

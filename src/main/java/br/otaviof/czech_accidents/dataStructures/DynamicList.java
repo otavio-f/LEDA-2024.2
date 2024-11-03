@@ -21,12 +21,12 @@ public class DynamicList<T extends Comparable<? super T>> implements List<T> {
     }
 
     @Override
-    public void append(T item) {
+    public void append(T item) { //TODO: Properly append instead of using shortcut
         this.insertAt(item, this.insertAt);
     }
 
     @Override
-    public void insertAt(T item, int index) {
+    public void insertAt(T item, int index) { // TODO: Fix inserting at <size> position. It should raise an error
         if(index > this.getSize() || index < 0)
             throw new IndexOutOfBoundsException("Index out of range!");
 
