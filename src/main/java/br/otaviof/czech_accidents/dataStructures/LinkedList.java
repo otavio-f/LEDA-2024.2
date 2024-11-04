@@ -1,5 +1,7 @@
 package br.otaviof.czech_accidents.dataStructures;
 
+import br.otaviof.czech_accidents.utils.GenericsUtils;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -224,11 +226,21 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     @Override
     public T[] toArray() {
-        return null;
+        final int length = this.getSize();
+        T[] result = GenericsUtils.createArrayOfSize(length);
+        Node<T> node = this.head.next;
+
+        for(int i=0; i<length; i++) {
+            result[i] = node.data;
+            node = node.next;
+        }
+
+        return result;
     }
 
     @Override
     public List<T> copy() {
+
         return null;
     }
 
