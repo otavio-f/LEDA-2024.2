@@ -188,12 +188,38 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     @Override
     public T minimum() {
-        return null;
+        if(this.isEmpty())
+            throw new EmptyException();
+
+        Node<T> node = this.head.next;
+        T result = node.data;
+        node = node.next; // comeca pelo 2o elemento
+
+        while(node != this.tail) {
+            if(result.compareTo(node.data) > 0)
+                result = node.data;
+            node = node.next;
+        }
+
+        return result;
     }
 
     @Override
     public T maximum() {
-        return null;
+        if(this.isEmpty())
+            throw new EmptyException();
+
+        Node<T> node = this.head.next;
+        T result = node.data;
+        node = node.next; // comeca pelo 2o elemento
+
+        while(node != this.tail) {
+            if(result.compareTo(node.data) < 0)
+                result = node.data;
+            node = node.next;
+        }
+
+        return result;
     }
 
     @Override
