@@ -240,8 +240,16 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     @Override
     public List<T> copy() {
-
-        return null;
+        LinkedList<T> result = new LinkedList<T>();
+        Node<T> node = this.head.next;
+        Node<T> temp = result.head;
+        while(node != this.tail) {
+            temp.next = new Node<T>(node.data);
+            node = node.next;
+            temp = temp.next;
+        }
+        temp.next = result.tail;
+        return result;
     }
 
     @Override
