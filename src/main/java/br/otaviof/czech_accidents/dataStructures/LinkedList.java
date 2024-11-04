@@ -174,7 +174,16 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     @Override
     public int indexOf(T item) {
-        return 0;
+        Node<T> node = this.head.next;
+        int counter = 0;
+
+        while(node != this.tail) {
+            if(Objects.equals(item, node.data))
+                return counter;
+            counter++;
+            node = node.next;
+        }
+        return -1;
     }
 
     @Override
