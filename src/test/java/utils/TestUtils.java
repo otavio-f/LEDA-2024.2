@@ -4,6 +4,8 @@ import java.util.Random;
 
 public final class TestUtils {
 
+    private static final Random RNG = new Random();
+
     /**
      * Generates an array of integers
      *
@@ -14,13 +16,16 @@ public final class TestUtils {
      */
     public static Integer[] genIntArray(int size, int low, int high) {
         long time = System.currentTimeMillis();
-        Random rng = new Random();
         Integer result[] = new Integer[size];
         while (--size >= 0)
-            result[size] = low + rng.nextInt(high - low);
+            result[size] = low + RNG.nextInt(high - low);
         time = System.currentTimeMillis() - time;
         System.out.printf("Generated array in %d ms!\n", time);
         return result;
+    }
+
+    public static Integer genInt() {
+        return RNG.nextInt();
     }
 
     /**

@@ -2,6 +2,7 @@ package br.otaviof.czech_accidents.dataStructures;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.TestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +12,7 @@ class ArrayQueueTest {
 
     @BeforeEach
     void setup() {
-        queue = new ArrayQueue<>(10);
+        queue = new ArrayQueue<>(5);
     }
 
     @Test
@@ -21,9 +22,29 @@ class ArrayQueueTest {
     }
 
     @Test
+    void testEnqueueOnFullThrows() {
+        queue.enqueue(TestUtils.genInt());
+        queue.enqueue(TestUtils.genInt());
+        queue.enqueue(TestUtils.genInt());
+        queue.enqueue(TestUtils.genInt());
+        queue.enqueue(TestUtils.genInt());
+
+        assertThrowsExactly(FullException.class, ()->
+                queue.enqueue(TestUtils.genInt()));
+    }
+
+    @Test
     void testDequeue() {
         queue.enqueue(1);
         assertEquals(1, queue.dequeue());
+    }
+
+    @Test
+    void testDequeueOnEmptyThrows() {
+        queue.enqueue(1);
+        queue.dequeue();
+
+        assertThrowsExactly(EmptyException.class, ()->queue.dequeue());
     }
 
     @Test
@@ -51,11 +72,13 @@ class ArrayQueueTest {
 
     @Test
     void testIsFull() {
-        queue = null; // queue with size 3
         assertFalse(queue.isFull());
-        queue.enqueue(1);
-        queue.enqueue(2);
-        queue.enqueue(3);
+        queue.enqueue(TestUtils.genInt());
+        queue.enqueue(TestUtils.genInt());
+        queue.enqueue(TestUtils.genInt());
+        queue.enqueue(TestUtils.genInt());
+        queue.enqueue(TestUtils.genInt());
+
         assertTrue(queue.isFull());
     }
 }
