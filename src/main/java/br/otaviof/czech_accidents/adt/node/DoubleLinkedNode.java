@@ -5,9 +5,7 @@ package br.otaviof.czech_accidents.adt.node;
  * @param <T> Um tipo comparável
  * @author otavio-f
  */
-final class DoubleLinkedNode<T extends Comparable<? super T>> {
-    private final T data;
-    private DoubleLinkedNode<T> next;
+public final class DoubleLinkedNode<T> extends LinkedNode<T> {
     private DoubleLinkedNode<T> prev;
 
     /**
@@ -15,33 +13,8 @@ final class DoubleLinkedNode<T extends Comparable<? super T>> {
      * @param data O dado a ser armazenado
      */
     public DoubleLinkedNode(T data) {
-        this.data = data;
-        this.next = null;
+        super(data);
         this.prev = null;
-    }
-
-    /**
-     * Obtém o dado contido neste nodo
-     * @return
-     */
-    public T getData() {
-        return this.data;
-    }
-
-    /**
-     * Obtém o nodo imediatamente depois deste
-     * @return O nodo ou null se não houver nenhum
-     */
-    public DoubleLinkedNode<T> getNext() {
-        return next;
-    }
-
-    /**
-     * Atribui o próximo nodo
-     * @param next
-     */
-    public void setNext(DoubleLinkedNode<T> next) {
-        this.next = next;
     }
 
     /**
@@ -58,5 +31,16 @@ final class DoubleLinkedNode<T extends Comparable<? super T>> {
      */
     public void setPrev(DoubleLinkedNode<T> prev) {
         this.prev = prev;
+    }
+
+    /**
+     * Busca o primeiro nodo, começando por esse
+     * @return o nodo sem nodo antes
+     */
+    public DoubleLinkedNode<T> getFirst() {
+        DoubleLinkedNode<T> result = this;
+        while(result.prev != null)
+            result = result.prev;
+        return result;
     }
 }
