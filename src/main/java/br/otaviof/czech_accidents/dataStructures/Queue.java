@@ -1,16 +1,48 @@
 package br.otaviof.czech_accidents.dataStructures;
 
-// FIFO
+/**
+ * Interface de dados abstratos do tipo fila, primeiro a entrar, primeiro a sair
+ * @author otavio-f
+ * @param <T> Um tipo comparável
+ */
 public interface Queue<T extends Comparable<? super T>> {
-    public void enqueue(T item);
+    /**
+     * Adiciona um item no final da fila
+     * @param item O item a ser adicionado ao final
+     * @throws FullException se a fila está cheia
+     */
+    void enqueue(T item);
 
-    public T dequeue();
+    /**
+     * Remove o primeiro item da fila
+     * @return O item removido
+     * @throws EmptyException se a fila está vazia
+     */
+    T dequeue();
 
-    public T peekTail();
+    /**
+     * Olha quem é o último da fila
+     * @return O último item da fila
+     * @throws EmptyException se a fila está vazia
+     */
+    T peekTail();
 
-    public T peekHead();
+    /**
+     * Olha quem é o primeiro item da fila
+     * @return O primeiro item da fila
+     * @throws EmptyException se a fila está vazia
+     */
+    T peekHead();
 
-    public boolean isEmpty();
+    /**
+     * Verifica se a fila está vazia
+     * @return true se a fila está vazia, senão false
+     */
+    boolean isEmpty();
 
-    public boolean isFull();
+    /**
+     * Verifica se a fila está cheia
+     * @return true se a fila está cheia, senão false
+     */
+    boolean isFull();
 }
