@@ -1,6 +1,6 @@
 package br.otaviof.czech_accidents.sort;
 
-public class HeapSort<T extends Comparable<? super T>> extends Sorter<T> {
+public class HeapSort<T extends Comparable<? super T>> extends SortingMethod<T> {
 
     public HeapSort(T[] data) {
         super(data);

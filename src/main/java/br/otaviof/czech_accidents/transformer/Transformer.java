@@ -25,7 +25,7 @@ public class Transformer {
          * @param arr Um array de elementos ordenáveis
          * @return Um método de ordenação
          */
-        public Sorter<T> create(T[] arr);
+        public SortingMethod<T> create(T[] arr);
     }
 
     public static Thread filterAsync(File input, File output, String column, Streamer.Filter filter) throws IOException {
@@ -88,12 +88,12 @@ public class Transformer {
     private static <T extends Comparable<? super T>> void applySort(SorterCreator<T> creator, Streamer st, T[] originalData, File output, SortOrder order) throws IOException {
         System.gc();
         T[] data = Arrays.copyOf(originalData, originalData.length);
-        Sorter<T> sorter = creator.create(data);
-        sorter.setProgressTracker((p) -> {
+        SortingMethod<T> sortingMethod = creator.create(data);
+        sortingMethod.setProgressTracker((p) -> {
             logger.fine(String.format("Sorting progress: %.2f %%", 100*p));
         });
         long time = System.currentTimeMillis();
-        int[] newOrder = sorter.sort();
+        int[] newOrder = sortingMethod.sort();
         if(order == SortOrder.DESCENDING)
             reverseOrder(newOrder);
         time = System.currentTimeMillis()-time;

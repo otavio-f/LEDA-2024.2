@@ -1,6 +1,6 @@
 package br.otaviof.czech_accidents.sort;
 
-public class MergeSort<T extends Comparable<? super T>> extends Sorter<T> {
+public class MergeSort<T extends Comparable<? super T>> extends SortingMethod<T> {
 
     public MergeSort(T[] data) {
         super(data);

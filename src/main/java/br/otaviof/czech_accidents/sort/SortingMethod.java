@@ -3,7 +3,7 @@ package br.otaviof.czech_accidents.sort;
 import br.otaviof.czech_accidents.tracker.ProgressTracker;
 import br.otaviof.czech_accidents.tracker.ProgressTracker.Tracker;
 
-public abstract class Sorter<T extends Comparable<? super T>> {
+public abstract class SortingMethod<T extends Comparable<? super T>> {
     protected final class Data<E extends Comparable<? super E>> implements Comparable<Data<E>> {
         protected final int index;
         protected final E value;
@@ -25,7 +25,7 @@ public abstract class Sorter<T extends Comparable<? super T>> {
     private final T values[];
 
     @SuppressWarnings("unchecked")
-    public Sorter(T data[]) {
+    public SortingMethod(T data[]) {
         this.length = data.length;
         this.progress = new ProgressTracker(this.length);
         this.values = data;

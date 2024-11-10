@@ -1,6 +1,6 @@
 package br.otaviof.czech_accidents.sort;
 
-public class QuickSortMedianThree<T extends Comparable<? super T>> extends Sorter<T> {
+public class QuickSortMedianThree<T extends Comparable<? super T>> extends SortingMethod<T> {
 
     public QuickSortMedianThree(T[] data) {
         super(data);

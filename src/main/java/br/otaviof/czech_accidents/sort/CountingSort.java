@@ -1,6 +1,6 @@
 package br.otaviof.czech_accidents.sort;
 
-public class CountingSort extends Sorter<Integer> {
+public class CountingSort extends SortingMethod<Integer> {
 
     public CountingSort(Integer[] data) {
         super(data);

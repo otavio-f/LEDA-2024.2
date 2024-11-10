@@ -1,6 +1,6 @@
 package br.otaviof.czech_accidents.sort;
 
-public class InsertionSort<T extends Comparable<? super T>> extends Sorter<T> {
+public class InsertionSort<T extends Comparable<? super T>> extends SortingMethod<T> {
 
     public InsertionSort(T[] data) {
         super(data);

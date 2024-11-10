@@ -1,8 +1,8 @@
 package br.otaviof.czech_accidents.sort;
 
-public class QuickSort<T extends Comparable<? super T>> extends Sorter<T> {
+public class QuickSort<T extends Comparable<? super T>> extends SortingMethod<T> {
 
-    public QuickSort(T data[]) {
+    public QuickSort(T[] data) {
         super(data);
     }
 
