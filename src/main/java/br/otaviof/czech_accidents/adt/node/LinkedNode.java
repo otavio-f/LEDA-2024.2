@@ -41,25 +41,4 @@ public class LinkedNode<T> {
     public void setNext(LinkedNode<T> next) {
         this.next = next;
     }
-
-    /**
-     * Busca o último nodo, começando por esse
-     * @return o nodo sem nodo após
-     */
-    public LinkedNode<T> getLast() {
-        LinkedNode<T> result = this;
-        while(result.next != null)
-            result = result.next;
-        return result;
-    }
-
-    /**
-     * Faz uma cópia desse nodo
-     * @return Um nodo com o mesmo dado e o mesmo próximo nodo
-     */
-    public LinkedNode<T> copy() {
-        LinkedNode<T> result = new LinkedNode<>(this.data);
-        result.next = this.next;
-        return result;
-    }
 }
