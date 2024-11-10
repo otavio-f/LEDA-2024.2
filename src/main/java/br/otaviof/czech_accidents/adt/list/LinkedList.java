@@ -19,8 +19,8 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
     private final LinkedNode<T> tail;
 
     public LinkedList() {
-        this.head = new LinkedNode<T>(null);
-        this.tail = new LinkedNode<T>(null);
+        this.head = new LinkedNode<>(null);
+        this.tail = new LinkedNode<>(null);
         this.head.setNext(this.tail);
     }
 
@@ -49,7 +49,7 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     @Override
     public void append(T item) {
-        final LinkedNode<T> node = new LinkedNode<T>(item);
+        final LinkedNode<T> node = new LinkedNode<>(item);
         LinkedNode<T> last = this.head;
         while(last.getNext() != this.tail)
             last = last.getNext();
@@ -231,11 +231,11 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     @Override
     public List<T> copy() {
-        LinkedList<T> result = new LinkedList<T>();
-       LinkedNode<T> node = this.head.getNext();
-       LinkedNode<T> temp = result.head;
+        LinkedList<T> result = new LinkedList<>();
+        LinkedNode<T> node = this.head.getNext();
+        LinkedNode<T> temp = result.head;
         while(node != this.tail) {
-            temp.setNext(new LinkedNode<T>(node.getData()));
+            temp.setNext(new LinkedNode<>(node.getData()));
             node = node.getNext();
             temp = temp.getNext();
         }
