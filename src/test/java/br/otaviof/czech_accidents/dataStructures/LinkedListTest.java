@@ -7,7 +7,13 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
+// TODO: Documentação
 
 class LinkedListTest {
 
@@ -120,11 +126,11 @@ class LinkedListTest {
         list.append(6);
 
         assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
-            list.swap(-1, 333);
+            list.swap(0, 333);
         });
 
         assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
-            list.swap(999, -1);
+            list.swap(1, -1);
         });
     }
 

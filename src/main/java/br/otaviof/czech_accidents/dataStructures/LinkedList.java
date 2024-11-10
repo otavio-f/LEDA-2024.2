@@ -13,28 +13,13 @@ import java.util.Objects;
  */
 public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
-    /**
-     * Nodo de uma lista encadeada
-     * @param <T>
-     */
-    private static class Node<T> {
-        // TODO: remove getters e setters já que essa classe não é visível
-        private final T data;
-        private Node<T> next;
-
-        public Node(T data) {
-            this.data = data;
-            this.next = null;
-        }
-    }
-
-    private final Node<T> head;
-    private final Node<T> tail;
+    private final LinkedNode<T> head;
+    private final LinkedNode<T> tail;
 
     public LinkedList() {
-        this.head = new Node<T>(null);
-        this.tail = new Node<T>(null);
-        this.head.next = this.tail;
+        this.head = new LinkedNode<T>(null);
+        this.tail = new LinkedNode<T>(null);
+        this.head.setNext(this.tail);
     }
 
     /**
@@ -44,14 +29,16 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
      * @throws EmptyException se a lista está vazia
      * @throws IndexOutOfBoundsException se a posição é inválida
      */
-    private Node<T> getNodeAt(int index) {
+    private LinkedNode<T> getNodeAt(int index) {
         if(this.isEmpty())
             throw new EmptyException();
-        Node<T> result = this.head.next;
+        if(index < 0)
+            throw new IndexOutOfBoundsException();
+        LinkedNode<T> result = this.head.getNext();
         while(index > 0) {
             if(result == this.tail)
                 throw new IndexOutOfBoundsException();
-            result = result.next;
+            result = result.getNext();
             index--;
         }
 
@@ -60,13 +47,13 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     @Override
     public void append(T item) {
-        final Node<T> node = new Node<T>(item);
-        Node<T> last = this.head;
-        while(last.next != this.tail)
-            last = last.next;
+        final LinkedNode<T> node = new LinkedNode<T>(item);
+        LinkedNode<T> last = this.head;
+        while(last.getNext() != this.tail)
+            last = last.getNext();
 
-        node.next = this.tail;
-        last.next = node;
+        node.setNext(this.tail);
+        last.setNext(node);
     }
 
     @Override
@@ -74,16 +61,16 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
         if(index < 0)
             throw new IndexOutOfBoundsException();
 
-        Node<T> before = this.head;
+        LinkedNode<T> before = this.head;
         while(index > 0) {
             if(before == this.tail)
                 throw new IndexOutOfBoundsException();
-            before = before.next;
+            before = before.getNext();
             index--;
         }
-        Node<T> node = new Node<>(item);
-        node.next = before.next;
-        before.next = node;
+       LinkedNode<T> node = new LinkedNode<>(item);
+        node.setNext(before.getNext());
+        before.setNext(node);
     }
 
     @Override
@@ -93,23 +80,25 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
         if(index < 0)
             throw new IndexOutOfBoundsException();
 
-        Node<T> before = this.head;
+       LinkedNode<T> before = this.head;
         while(index > 0) {
             if(before == this.tail)
                 throw new IndexOutOfBoundsException();
-            before = before.next;
+            before = before.getNext();
             index--;
         }
 
-        Node<T> result = before.next;
-        before.next = result.next;
-        return result.data;
+       LinkedNode<T> result = before.getNext();
+        before.setNext(result.getNext());
+        return result.getData();
     }
 
     @Override
     public void swap(int i, int j) {
         if(this.isEmpty())
             throw new EmptyException();
+        if(i<0 || j<0)
+            throw new IndexOutOfBoundsException();
         if(i==j) // nao faz nada se forem iguais
             return;
         if(j<i) { // menor indice sempre vai ser <i>
@@ -117,7 +106,7 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
             i = j;
             j = temp;
         }
-        Node<T> temp = this.head;
+       LinkedNode<T> temp = this.head;
 
         // 1a forma
         /*
@@ -145,9 +134,9 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
     @Override
     public int getSize() {
         int count = 0;
-        Node<T> node = this.head.next;
+       LinkedNode<T> node = this.head.getNext();
         while(node != this.tail) {
-            node = node.next;
+            node = node.getNext();
             count++;
         }
         return count;
@@ -155,35 +144,35 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return (this.head.next == this.tail);
+        return (this.head.getNext() == this.tail);
     }
 
     @Override
     public boolean contains(T item) {
-        Node<T> node = this.head.next;
+       LinkedNode<T> node = this.head.getNext();
         while(node != this.tail) {
-            if(Objects.equals(item, node.data))
+            if(Objects.equals(item, node.getData()))
                 return true;
-            node = node.next;
+            node = node.getNext();
         }
         return false;
     }
 
     @Override
     public T getAt(int index) {
-        return this.getNodeAt(index).data;
+        return this.getNodeAt(index).getData();
     }
 
     @Override
     public int indexOf(T item) {
-        Node<T> node = this.head.next;
+       LinkedNode<T> node = this.head.getNext();
         int counter = 0;
 
         while(node != this.tail) {
-            if(Objects.equals(item, node.data))
+            if(Objects.equals(item, node.getData()))
                 return counter;
             counter++;
-            node = node.next;
+            node = node.getNext();
         }
         return -1;
     }
@@ -193,14 +182,14 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
         if(this.isEmpty())
             throw new EmptyException();
 
-        Node<T> node = this.head.next;
-        T result = node.data;
-        node = node.next; // comeca pelo 2o elemento
+       LinkedNode<T> node = this.head.getNext();
+        T result = node.getData();
+        node = node.getNext(); // comeca pelo 2o elemento
 
         while(node != this.tail) {
-            if(result.compareTo(node.data) > 0)
-                result = node.data;
-            node = node.next;
+            if(result.compareTo(node.getData()) > 0)
+                result = node.getData();
+            node = node.getNext();
         }
 
         return result;
@@ -211,14 +200,14 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
         if(this.isEmpty())
             throw new EmptyException();
 
-        Node<T> node = this.head.next;
-        T result = node.data;
-        node = node.next; // comeca pelo 2o elemento
+       LinkedNode<T> node = this.head.getNext();
+        T result = node.getData();
+        node = node.getNext(); // comeca pelo 2o elemento
 
         while(node != this.tail) {
-            if(result.compareTo(node.data) < 0)
-                result = node.data;
-            node = node.next;
+            if(result.compareTo(node.getData()) < 0)
+                result = node.getData();
+            node = node.getNext();
         }
 
         return result;
@@ -228,11 +217,11 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
     public T[] toArray() {
         final int length = this.getSize();
         T[] result = GenericsUtils.createArrayOfSize(length);
-        Node<T> node = this.head.next;
+       LinkedNode<T> node = this.head.getNext();
 
         for(int i=0; i<length; i++) {
-            result[i] = node.data;
-            node = node.next;
+            result[i] = node.getData();
+            node = node.getNext();
         }
 
         return result;
@@ -241,14 +230,14 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
     @Override
     public List<T> copy() {
         LinkedList<T> result = new LinkedList<T>();
-        Node<T> node = this.head.next;
-        Node<T> temp = result.head;
+       LinkedNode<T> node = this.head.getNext();
+       LinkedNode<T> temp = result.head;
         while(node != this.tail) {
-            temp.next = new Node<T>(node.data);
-            node = node.next;
-            temp = temp.next;
+            temp.setNext(new LinkedNode<T>(node.getData()));
+            node = node.getNext();
+            temp = temp.getNext();
         }
-        temp.next = result.tail;
+        temp.setNext(result.tail);
         return result;
     }
 
@@ -258,20 +247,19 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
             throw new EmptyException();
 
         return new Iterator<T>() {
-            Node<T> node = head;
+           LinkedNode<T> node = head;
             @Override
             public boolean hasNext() {
-                return (node != null);
+                return (node != tail);
             }
 
             @Override
             public T next() {
+                node = node.getNext();
                 if(!this.hasNext())
                     throw new NoSuchElementException();
 
-                final T item = node.data;
-                node = node.next;
-                return item;
+                return node.getData();
             }
         };
     }
