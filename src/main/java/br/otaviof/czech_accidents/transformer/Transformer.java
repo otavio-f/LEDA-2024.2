@@ -1,7 +1,7 @@
 package br.otaviof.czech_accidents.transformer;
 
-import br.otaviof.czech_accidents.IO.Streamer;
-import br.otaviof.czech_accidents.sorters.*;
+import br.otaviof.czech_accidents.io.Streamer;
+import br.otaviof.czech_accidents.sort.*;
 
 import java.io.File;
 import java.io.IOException;
