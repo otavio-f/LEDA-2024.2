@@ -8,7 +8,7 @@ import br.otaviof.czech_accidents.adt.FullException;
  * @author otavio-f
  * @param <T> Um tipo comparável
  */
-public interface Queue<T extends Comparable<? super T>> {
+public interface Queue<T> {
     /**
      * Adiciona um item no final da fila
      * @param item O item a ser adicionado ao final

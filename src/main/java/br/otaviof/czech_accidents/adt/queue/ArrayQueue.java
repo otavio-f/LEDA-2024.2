@@ -9,7 +9,7 @@ import br.otaviof.czech_accidents.utils.GenericsUtils;
  * @author otavio-f
  * @param <T> um tipo comparável
  */
-public class ArrayQueue<T extends Comparable<? super T>> implements Queue<T> {
+public class ArrayQueue<T> implements Queue<T> {
 
     private final T[] data;
     private int tail;

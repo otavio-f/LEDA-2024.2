@@ -9,7 +9,7 @@ import br.otaviof.czech_accidents.adt.node.LinkedNode;
  * @param <T>
  * @author otavio-f
  */
-public class LinkedQueue<T extends Comparable<? super T>> implements Queue<T> {
+public class LinkedQueue<T> implements Queue<T> {
     private static final int NO_LIMIT = -1;
 
     private final int size;
