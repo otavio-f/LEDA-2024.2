@@ -1,5 +1,6 @@
 package br.otaviof.czech_accidents.adt.list;
 
+import br.otaviof.czech_accidents.adt.AbstractDataType;
 import br.otaviof.czech_accidents.adt.EmptyException;
 
 import java.util.Iterator;
@@ -9,7 +10,7 @@ import java.util.Iterator;
  * Representa uma lista de elementos de mesmo tipo
  * @param <T> Um tipo genérico comparável
  */
-public interface List<T extends Comparable<? super T>> {
+public interface List<T extends Comparable<? super T>> extends AbstractDataType<T> {
     /**
      * Insere um item no final dessa lista
      * @param item
@@ -94,22 +95,4 @@ public interface List<T extends Comparable<? super T>> {
      */
     public T maximum();
 
-    /**
-     * Constroi um array a partir dos itens dessa lista
-     * @return Um array
-     */
-    public T[] toArray();
-
-    /**
-     * Faz uma cópia dessa coleção
-     * @return Uma cópia rasa dos itens dessa lista
-     */
-    public List<T> copy();
-
-    /**
-     * Cria um iterador sobre essa coleção
-     * @return Um iterador sobre os itens dessa lista
-     * @throws EmptyException se a lista está vazia
-     */
-    public Iterator<T> getIterator();
 }

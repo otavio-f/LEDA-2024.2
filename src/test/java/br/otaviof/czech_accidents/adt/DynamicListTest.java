@@ -281,7 +281,7 @@ class DynamicListTest {
         list.append(rng.nextInt());
         list.append(rng.nextInt());
         list.append(rng.nextInt());
-        List<Integer> other = list.copy();
+        List<Integer> other = (List<Integer>) list.copy();
 
         assertEquals(list.getSize(), other.getSize());
         assertEquals(list.getAt(0), other.getAt(0));
