@@ -26,11 +26,4 @@ public interface AbstractDataType<T> {
      */
     public T[] toArray();
 
-    /**
-     * Faz uma cópia dessa coleção.
-     * A coleção original não será modificada.
-     * @return Uma cópia rasa dos itens dessa lista
-     */
-    public AbstractDataType<T> copy();
-
 }

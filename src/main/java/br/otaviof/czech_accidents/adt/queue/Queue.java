@@ -1,5 +1,6 @@
 package br.otaviof.czech_accidents.adt.queue;
 
+import br.otaviof.czech_accidents.adt.AbstractDataType;
 import br.otaviof.czech_accidents.adt.EmptyException;
 import br.otaviof.czech_accidents.adt.FullException;
 
@@ -8,7 +9,7 @@ import br.otaviof.czech_accidents.adt.FullException;
  * @author otavio-f
  * @param <T> Um tipo comparável
  */
-public interface Queue<T> {
+public interface Queue<T> extends AbstractDataType<T> {
     /**
      * Adiciona um item no final da fila
      * @param item O item a ser adicionado ao final

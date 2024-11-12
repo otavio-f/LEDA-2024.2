@@ -6,6 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.TestUtils;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -207,5 +210,56 @@ class ArrayStackTest {
         stack.pop();
 
         assertThrowsExactly(EmptyException.class, ()-> stack.top());
+    }
+
+    /**
+     * O array de uma pilha é a representação dos elementos contidos na pilha em ordem.
+     */
+    @Test
+    void testToArray() {
+        stack.push(30);
+        stack.push(96);
+        stack.push(1);
+
+        assertArrayEquals(new Integer[] {1, 96, 30}, stack.toArray());
+    }
+
+    /**
+     * O array de uma pilha vazia não deve conter nenhum elemento.
+     */
+    @Test
+    void testEmptyToArray() {
+        assertArrayEquals(new Integer[] {}, stack.toArray());
+
+    }
+
+    /**
+     * Iterar sobre uma pilha em ordem, sem modificar a coleção.
+     */
+    @Test
+    void testIterator() {
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+
+        Iterator<Integer> it = stack.getIterator();
+
+        assertEquals(3, it.next());
+        assertEquals(2, it.next());
+        assertEquals(1, it.next());
+
+        assertThrowsExactly(NoSuchElementException.class, () -> {
+            it.next();
+        });
+    }
+
+    /**
+     * Iterar sobre uma pilha vazia deve gerar uma exceção.
+     */
+    @Test
+    void testIteratorOnEmptyThrows() {
+        assertThrowsExactly(EmptyException.class, () -> {
+            stack.getIterator();
+        });
     }
 }

@@ -4,6 +4,9 @@ import br.otaviof.czech_accidents.adt.EmptyException;
 import br.otaviof.czech_accidents.adt.FullException;
 import br.otaviof.czech_accidents.adt.node.LinkedNode;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 /**
  * Implementação de fila baseada em nodos encadeados
  * @param <T> tipo genérico
@@ -96,5 +99,33 @@ public class LinkedStack<T> implements Stack<T>  {
         }
 
         return false;
+    }
+
+    @Override
+    public Iterator<T> getIterator() {
+        if(this.isEmpty())
+            throw new EmptyException();
+
+        return new Iterator<T>() {
+            LinkedNode<T> node = head;
+            @Override
+            public boolean hasNext() {
+                return this.node != tail;
+            }
+
+            @Override
+            public T next() {
+                node = node.getNext();
+                if(!this.hasNext())
+                    throw new NoSuchElementException();
+                return node.getData();
+            }
+        };
+    }
+
+    @Override
+    public T[] toArray() {
+        // TODO
+        return null;
     }
 }

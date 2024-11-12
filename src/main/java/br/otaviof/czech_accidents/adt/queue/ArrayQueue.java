@@ -1,8 +1,12 @@
 package br.otaviof.czech_accidents.adt.queue;
 
+import br.otaviof.czech_accidents.adt.AbstractDataType;
 import br.otaviof.czech_accidents.adt.EmptyException;
 import br.otaviof.czech_accidents.adt.FullException;
 import br.otaviof.czech_accidents.utils.GenericsUtils;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Implementação da interface Queue sobre um array genérico de tamanho fixo
@@ -74,5 +78,38 @@ public class ArrayQueue<T> implements Queue<T> {
     @Override
     public boolean isFull() {
         return (!this.isEmpty && this.head == this.tail);
+    }
+
+    @Override
+    public Iterator<T> getIterator() {
+        if(this.isEmpty())
+            throw new EmptyException();
+
+        return new Iterator<T>() {
+            int index = head-1;
+            @Override
+            public boolean hasNext() {
+                return (this.index != tail);
+            }
+
+            @Override
+            public T next() {
+                this.index++;
+                if(this.index==data.length)
+                    this.index = 0;
+                if(!this.hasNext())
+                    throw new NoSuchElementException();
+                return data[this.index];
+            }
+        };
+    }
+
+    @Override
+    public T[] toArray() {
+        if(this.isEmpty)
+            return GenericsUtils.createArrayOfSize(0);
+
+        //TODO
+        return null;
     }
 }

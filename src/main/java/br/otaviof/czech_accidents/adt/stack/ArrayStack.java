@@ -4,6 +4,9 @@ import br.otaviof.czech_accidents.adt.EmptyException;
 import br.otaviof.czech_accidents.adt.FullException;
 import br.otaviof.czech_accidents.utils.GenericsUtils;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 /**
  * Implementação de pilha sobre array
  * @param <T> Um tipo genérico
@@ -80,5 +83,39 @@ public class ArrayStack<T> implements Stack<T> {
     @Override
     public boolean isFull() {
         return (this.top == this.data.length);
+    }
+
+    @Override
+    public Iterator<T> getIterator() {
+        if(this.isEmpty())
+            throw new EmptyException();
+
+        return new Iterator<T>() {
+            int index = top;
+            @Override
+            public boolean hasNext() {
+                return (this.index >= 0);
+            }
+
+            @Override
+            public T next() {
+                this.index--;
+                if(!this.hasNext())
+                    throw new NoSuchElementException();
+                return data[this.index];
+            }
+        };
+    }
+
+    @Override
+    public T[] toArray() {
+        T[] result = GenericsUtils.createArrayOfSize(this.top);
+
+        final int topIndex = top-1;
+
+        for(int i=0; i<this.top; i++) {
+            result[topIndex-i] = this.data[i];
+        }
+        return result;
     }
 }

@@ -6,10 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.TestUtils;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 
 /**
@@ -197,5 +198,56 @@ class LinkedQueueTest {
         queue.dequeue();
 
         assertThrowsExactly(EmptyException.class, ()->queue.peekHead());
+    }
+
+    /**
+     * O array de uma fila é a representação dos elementos contidos na fila em ordem.
+     */
+    @Test
+    void testToArray() {
+        queue.enqueue(30);
+        queue.enqueue(96);
+        queue.enqueue(1);
+
+        assertArrayEquals(new Integer[] {30, 96, 1}, queue.toArray());
+    }
+
+    /**
+     * O array de uma fila vazia não deve conter nenhum elemento.
+     */
+    @Test
+    void testEmptyToArray() {
+        assertArrayEquals(new Integer[] {}, queue.toArray());
+
+    }
+
+    /**
+     * Iterar sobre uma fila em ordem, sem modificar a coleção.
+     */
+    @Test
+    void testIterator() {
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+
+        Iterator<Integer> it = queue.getIterator();
+
+        assertEquals(1, it.next());
+        assertEquals(2, it.next());
+        assertEquals(3, it.next());
+
+        assertThrowsExactly(NoSuchElementException.class, () -> {
+            it.next();
+        });
+    }
+
+    /**
+     * Iterar sobre uma fila vazia deve gerar uma exceção.
+     */
+    @Test
+    void testIteratorOnEmptyThrows() {
+        assertThrowsExactly(EmptyException.class, () -> {
+            queue.getIterator();
+        });
     }
 }

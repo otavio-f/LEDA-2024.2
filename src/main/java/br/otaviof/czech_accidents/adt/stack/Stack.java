@@ -1,5 +1,6 @@
 package br.otaviof.czech_accidents.adt.stack;
 
+import br.otaviof.czech_accidents.adt.AbstractDataType;
 import br.otaviof.czech_accidents.adt.EmptyException;
 
 /**
@@ -7,7 +8,7 @@ import br.otaviof.czech_accidents.adt.EmptyException;
  * @param <T> Um tipo genérico comparável
  * @author otavio-f
  */
-public interface Stack <T> {
+public interface Stack<T> extends AbstractDataType<T> {
 
     /**
      * Adiciona um elemento no topo da pilha

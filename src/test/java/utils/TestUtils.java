@@ -16,16 +16,33 @@ public final class TestUtils {
      */
     public static Integer[] genIntArray(int size, int low, int high) {
         long time = System.currentTimeMillis();
-        Integer result[] = new Integer[size];
+        Integer[] result = new Integer[size];
         while (--size >= 0)
-            result[size] = low + RNG.nextInt(high - low);
+            result[size] = genInt(low, high);
         time = System.currentTimeMillis() - time;
         System.out.printf("Generated array in %d ms!\n", time);
         return result;
     }
 
+
+    /**
+     * Generates a random integer
+     *
+     * @param low  lower limit of integer range
+     * @param high upper limit of integer range
+     * @return a integer from low to high
+     */
+    public static Integer genInt(int low, int high) {
+        return low + RNG.nextInt(high - low);
+    }
+
+    /**
+     * Generates a random integer from 0 to 100
+     *
+     * @return a integer in the range 0-100, inclusive
+     */
     public static Integer genInt() {
-        return RNG.nextInt();
+        return genInt(0,100);
     }
 
     /**

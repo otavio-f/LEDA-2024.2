@@ -1,8 +1,12 @@
 package br.otaviof.czech_accidents.adt.queue;
 
+import br.otaviof.czech_accidents.adt.AbstractDataType;
 import br.otaviof.czech_accidents.adt.EmptyException;
 import br.otaviof.czech_accidents.adt.FullException;
 import br.otaviof.czech_accidents.adt.node.LinkedNode;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Implementação de Fila baseada em elementos encadeados
@@ -98,5 +102,33 @@ public class LinkedQueue<T> implements Queue<T> {
         }
 
         return false;
+    }
+
+    @Override
+    public Iterator<T> getIterator() {
+        if(this.isEmpty())
+            throw new EmptyException();
+
+        return new Iterator<T>() {
+            LinkedNode<T> node = head;
+            @Override
+            public boolean hasNext() {
+                return node != tail;
+            }
+
+            @Override
+            public T next() {
+                node = node.getNext();
+                if(!this.hasNext())
+                    throw new NoSuchElementException();
+                return node.getData();
+            }
+        };
+    }
+
+    @Override
+    public T[] toArray() {
+        // TODO
+        return null;
     }
 }

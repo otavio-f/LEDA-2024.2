@@ -167,26 +167,12 @@ public class DynamicList<T extends Comparable<? super T>> implements List<T> {
         return result;
     }
 
-    @Override
-    public List<T> copy() {
-        DynamicList<T> result = new DynamicList<>();
-
-        result.data = GenericsUtils.createArrayOfSize(this.insertAt);
-        result.insertAt = this.insertAt;
-        if (this.insertAt >= 0)
-            System.arraycopy(this.data, 0, result.data, 0, this.insertAt);
-//        for(int i=0; i<this.insertAt; i++)
-//            result.data[i] = this.data[i];
-
-        return result;
-    }
-
     public Iterator<T> getIterator() {
         if(this.isEmpty())
             throw new EmptyException();
 
         return new Iterator<T>() {
-            int index = 0;
+            int index = -1;
 
             @Override
             public boolean hasNext() {
@@ -195,12 +181,11 @@ public class DynamicList<T extends Comparable<? super T>> implements List<T> {
 
             @Override
             public T next() {
+                this.index++;
                 if(!this.hasNext())
                     throw new NoSuchElementException();
 
-                T result = data[this.index];
-                this.index++;
-                return result;
+                return data[this.index];
             }
         };
     }
