@@ -1,7 +1,10 @@
 package br.otaviof.czech_accidents.adt;
 
+import br.otaviof.czech_accidents.adt.list.DynamicList;
 import br.otaviof.czech_accidents.adt.list.LinkedList;
 import br.otaviof.czech_accidents.adt.list.List;
+import br.otaviof.czech_accidents.adt.queue.ArrayQueue;
+import br.otaviof.czech_accidents.adt.stack.ArrayStack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.TestUtils;
@@ -28,6 +31,21 @@ class LinkedListTest {
     @BeforeEach
     void setup() {
         list = new LinkedList<>();
+    }
+
+    /**
+     * Deve ser possível copiar os dados a partir de outra estrutura de dados abstrata
+     */
+    @Test
+    void testCopyOver() {
+        final ArrayStack<Integer> stack = new ArrayStack<>(5);
+        stack.push(3);
+        stack.push(4);
+        stack.push(5);
+
+        final DynamicList<Integer> testList = new DynamicList<>(stack);
+
+        assertArrayEquals(stack.toArray(), testList.toArray());
     }
 
     /**

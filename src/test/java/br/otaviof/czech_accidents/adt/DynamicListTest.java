@@ -2,6 +2,7 @@ package br.otaviof.czech_accidents.adt;
 
 import br.otaviof.czech_accidents.adt.list.DynamicList;
 import br.otaviof.czech_accidents.adt.list.List;
+import br.otaviof.czech_accidents.adt.queue.ArrayQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.TestUtils;
@@ -24,6 +25,21 @@ class DynamicListTest {
     @BeforeEach
     void setup() {
         list = new DynamicList<>();
+    }
+
+    /**
+     * Deve ser possível copiar os dados a partir de outra estrutura de dados abstrata
+     */
+    @Test
+    void testCopyOver() {
+        final ArrayQueue<Integer> queue = new ArrayQueue<>(5);
+        queue.enqueue(3);
+        queue.enqueue(4);
+        queue.enqueue(5);
+
+        final DynamicList<Integer> testList = new DynamicList<>(queue);
+
+        assertArrayEquals(queue.toArray(), testList.toArray());
     }
 
     /**

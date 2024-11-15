@@ -1,5 +1,6 @@
 package br.otaviof.czech_accidents.adt.list;
 
+import br.otaviof.czech_accidents.adt.AbstractDataType;
 import br.otaviof.czech_accidents.adt.EmptyException;
 import br.otaviof.czech_accidents.utils.GenericsUtils;
 
@@ -21,13 +22,33 @@ public class DynamicList<T extends Comparable<? super T>> implements List<T> {
         this.insertAt = 0;
     }
 
+    /**
+     * Cria uma instância baseada nos dados de outra coleção
+     * @param collection Uma coleção abstrata de dados
+     */
+    public DynamicList(AbstractDataType<T> collection) {
+        int count = 0;
+        Iterator<T> iter = collection.getIterator();
+        while(iter.hasNext()) {
+            count++;
+            iter.next();
+        }
+
+        this.data = GenericsUtils.createArrayOfSize(count);
+        iter = collection.getIterator();
+        for(int i=0; i<count; i++) {
+            this.data[i] = iter.next();
+        }
+        this.insertAt = this.data.length;
+    }
+
     @Override
-    public void append(T item) { //TODO: Properly append instead of using shortcut
+    public void append(T item) {
         this.insertAt(item, this.insertAt);
     }
 
     @Override
-    public void insertAt(T item, int index) { // TODO: Fix inserting at <size> position. It should raise an error
+    public void insertAt(T item, int index) {
         if(index > this.getSize() || index < 0)
             throw new IndexOutOfBoundsException("Index out of range!");
 
@@ -172,20 +193,21 @@ public class DynamicList<T extends Comparable<? super T>> implements List<T> {
             throw new EmptyException();
 
         return new Iterator<T>() {
-            int index = -1;
+            int index = 0;
 
             @Override
             public boolean hasNext() {
-                return index < insertAt;
+                return this.index < insertAt;
             }
 
             @Override
             public T next() {
-                this.index++;
                 if(!this.hasNext())
                     throw new NoSuchElementException();
+                T result = data[this.index];
+                this.index++;
 
-                return data[this.index];
+                return result;
             }
         };
     }

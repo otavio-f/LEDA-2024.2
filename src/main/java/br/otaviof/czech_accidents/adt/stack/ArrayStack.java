@@ -91,7 +91,7 @@ public class ArrayStack<T> implements Stack<T> {
             throw new EmptyException();
 
         return new Iterator<T>() {
-            int index = top;
+            int index = top-1;
             @Override
             public boolean hasNext() {
                 return (this.index >= 0);
@@ -99,10 +99,11 @@ public class ArrayStack<T> implements Stack<T> {
 
             @Override
             public T next() {
-                this.index--;
                 if(!this.hasNext())
                     throw new NoSuchElementException();
-                return data[this.index];
+                T result = data[this.index];
+                this.index--;
+                return result;
             }
         };
     }

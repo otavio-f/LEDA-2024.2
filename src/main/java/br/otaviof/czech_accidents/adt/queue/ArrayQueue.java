@@ -86,7 +86,7 @@ public class ArrayQueue<T> implements Queue<T> {
             throw new EmptyException();
 
         return new Iterator<T>() {
-            int index = head-1;
+            int index = head;
             @Override
             public boolean hasNext() {
                 return (this.index != tail);
@@ -94,12 +94,13 @@ public class ArrayQueue<T> implements Queue<T> {
 
             @Override
             public T next() {
+                if(!this.hasNext())
+                    throw new NoSuchElementException();
+                T result = data[this.index];
                 this.index++;
                 if(this.index==data.length)
                     this.index = 0;
-                if(!this.hasNext())
-                    throw new NoSuchElementException();
-                return data[this.index];
+                return result;
             }
         };
     }
@@ -109,7 +110,12 @@ public class ArrayQueue<T> implements Queue<T> {
         if(this.isEmpty)
             return GenericsUtils.createArrayOfSize(0);
 
-        //TODO
-        return null;
+        final int length = (this.head < this.tail)? (tail-head) : (data.length + tail - head);
+        T[] result = GenericsUtils.createArrayOfSize(length);
+
+        for(int i=0; i<length; i++)
+            result[i] = this.data[(this.head+i)%this.data.length];
+
+        return result;
     }
 }

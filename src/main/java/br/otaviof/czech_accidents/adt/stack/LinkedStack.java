@@ -3,6 +3,7 @@ package br.otaviof.czech_accidents.adt.stack;
 import br.otaviof.czech_accidents.adt.EmptyException;
 import br.otaviof.czech_accidents.adt.FullException;
 import br.otaviof.czech_accidents.adt.node.LinkedNode;
+import br.otaviof.czech_accidents.utils.GenericsUtils;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -125,7 +126,21 @@ public class LinkedStack<T> implements Stack<T>  {
 
     @Override
     public T[] toArray() {
-        // TODO
-        return null;
+        int length = 0;
+        LinkedNode<T> node = this.head;
+        while(node.getNext() != this.tail) {
+            node = node.getNext();
+            length++;
+        }
+
+        T[] result = GenericsUtils.createArrayOfSize(length);
+        node = this.head;
+        int count = 0;
+        while(node.getNext() != this.tail) {
+            node = node.getNext();
+            result[count] = node.getData();
+            count++;
+        }
+        return result;
     }
 }

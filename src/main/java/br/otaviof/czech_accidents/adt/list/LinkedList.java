@@ -1,5 +1,6 @@
 package br.otaviof.czech_accidents.adt.list;
 
+import br.otaviof.czech_accidents.adt.AbstractDataType;
 import br.otaviof.czech_accidents.adt.EmptyException;
 import br.otaviof.czech_accidents.adt.node.LinkedNode;
 import br.otaviof.czech_accidents.utils.GenericsUtils;
@@ -20,6 +21,21 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
     public LinkedList() {
         this.head.setNext(this.tail);
+    }
+
+    /**
+     * Cria uma instância baseada nos dados de outra coleção
+     * @param collection Uma coleção abstrata de dados
+     */
+    public LinkedList(AbstractDataType<T> collection) {
+        final Iterator<T> iter = collection.getIterator();
+        LinkedNode<T> last = this.head;
+        while(iter.hasNext()) {
+            final LinkedNode<T> newNode = new LinkedNode<>(iter.next());
+            last.setNext(newNode);
+            last = newNode;
+        }
+        last.setNext(this.tail);
     }
 
     @Override

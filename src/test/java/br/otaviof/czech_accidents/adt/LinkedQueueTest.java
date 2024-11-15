@@ -218,7 +218,6 @@ class LinkedQueueTest {
     @Test
     void testEmptyToArray() {
         assertArrayEquals(new Integer[] {}, queue.toArray());
-
     }
 
     /**

@@ -208,8 +208,14 @@ class ArrayQueueTest {
         queue.enqueue(30);
         queue.enqueue(96);
         queue.enqueue(1);
+        queue.dequeue();
+        queue.dequeue();
+        queue.enqueue(30);
+        queue.enqueue(96);
+        queue.enqueue(1);
+        queue.enqueue(40);
 
-        assertArrayEquals(new Integer[] {30, 96, 1}, queue.toArray());
+        assertArrayEquals(new Integer[] {1, 30, 96, 1, 40}, queue.toArray());
     }
 
     /**
