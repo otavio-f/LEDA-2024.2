@@ -1,5 +1,6 @@
 package br.otaviof.czech_accidents.adt.stack;
 
+import br.otaviof.czech_accidents.adt.AbstractDataType;
 import br.otaviof.czech_accidents.adt.EmptyException;
 import br.otaviof.czech_accidents.adt.FullException;
 import br.otaviof.czech_accidents.adt.node.LinkedNode;
@@ -27,6 +28,23 @@ public class LinkedStack<T> implements Stack<T>  {
     public LinkedStack(int size) {
         this.size = size;
         this.head.setNext(this.tail);
+    }
+
+    /**
+     * Cria uma instância baseada nos dados de outra coleção.
+     * A coleção possui tamanho ilimitado.
+     * @param collection Uma coleção abstrata de dados
+     */
+    public LinkedStack(AbstractDataType<T> collection) {
+        final Iterator<T> iter = collection.getIterator();
+        LinkedNode<T> last = this.head;
+        while(iter.hasNext()) {
+            final LinkedNode<T> newNode = new LinkedNode<>(iter.next());
+            last.setNext(newNode);
+            last = newNode;
+        }
+        last.setNext(this.tail);
+        this.size = NO_LIMIT;
     }
 
     /**
@@ -108,7 +126,7 @@ public class LinkedStack<T> implements Stack<T>  {
             throw new EmptyException();
 
         return new Iterator<T>() {
-            LinkedNode<T> node = head;
+            LinkedNode<T> node = head.getNext();
             @Override
             public boolean hasNext() {
                 return this.node != tail;
@@ -116,10 +134,11 @@ public class LinkedStack<T> implements Stack<T>  {
 
             @Override
             public T next() {
-                node = node.getNext();
                 if(!this.hasNext())
                     throw new NoSuchElementException();
-                return node.getData();
+                T result = node.getData();
+                node = node.getNext();
+                return result;
             }
         };
     }

@@ -33,6 +33,23 @@ public class LinkedQueue<T> implements Queue<T> {
     }
 
     /**
+     * Cria uma instância baseada nos dados de outra coleção.
+     * Essa coleção é de tamanho ilimitado.
+     * @param collection Uma coleção abstrata de dados
+     */
+    public LinkedQueue(AbstractDataType<T> collection) {
+        final Iterator<T> iter = collection.getIterator();
+        LinkedNode<T> last = this.head;
+        while(iter.hasNext()) {
+            final LinkedNode<T> newNode = new LinkedNode<>(iter.next());
+            last.setNext(newNode);
+            last = newNode;
+        }
+        last.setNext(this.tail);
+        this.size = NO_LIMIT;
+    }
+
+    /**
      * Cria uma fila
      */
     public LinkedQueue() {
@@ -111,7 +128,7 @@ public class LinkedQueue<T> implements Queue<T> {
             throw new EmptyException();
 
         return new Iterator<T>() {
-            LinkedNode<T> node = head;
+            LinkedNode<T> node = head.getNext();
             @Override
             public boolean hasNext() {
                 return node != tail;
@@ -119,10 +136,11 @@ public class LinkedQueue<T> implements Queue<T> {
 
             @Override
             public T next() {
-                node = node.getNext();
                 if(!this.hasNext())
                     throw new NoSuchElementException();
-                return node.getData();
+                T result = node.getData();
+                node = node.getNext();
+                return result;
             }
         };
     }

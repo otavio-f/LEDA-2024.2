@@ -256,7 +256,7 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
             throw new EmptyException();
 
         return new Iterator<T>() {
-            LinkedNode<T> node = head;
+            LinkedNode<T> node = head.getNext();
 
             @Override
             public boolean hasNext() {
@@ -265,11 +265,12 @@ public class LinkedList<T extends Comparable<? super T>> implements List<T> {
 
             @Override
             public T next() {
-                node = node.getNext();
                 if (!this.hasNext())
                     throw new NoSuchElementException();
+                T result = node.getData();
+                node = node.getNext();
 
-                return node.getData();
+                return result;
             }
         };
     }
