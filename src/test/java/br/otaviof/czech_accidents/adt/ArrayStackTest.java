@@ -1,5 +1,6 @@
 package br.otaviof.czech_accidents.adt;
 
+import br.otaviof.czech_accidents.adt.queue.ArrayQueue;
 import br.otaviof.czech_accidents.adt.stack.ArrayStack;
 import br.otaviof.czech_accidents.adt.stack.Stack;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,21 @@ class ArrayStackTest {
     @BeforeEach
     void setup() {
         stack = new ArrayStack<>(5);
+    }
+
+    /**
+     * Deve ser possível copiar os dados a partir de outra estrutura de dados abstrata
+     */
+    @Test
+    void testCopyOver() {
+        final ArrayQueue<Integer> queue = new ArrayQueue<>(5);
+        queue.enqueue(3);
+        queue.enqueue(4);
+        queue.enqueue(5);
+
+        final ArrayStack<Integer> testStack = new ArrayStack<>(queue);
+
+        assertArrayEquals(new Integer[] {5, 4, 3}, testStack.toArray());
     }
 
     /**

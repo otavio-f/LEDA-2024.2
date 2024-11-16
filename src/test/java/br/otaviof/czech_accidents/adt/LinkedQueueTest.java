@@ -1,5 +1,6 @@
 package br.otaviof.czech_accidents.adt;
 
+import br.otaviof.czech_accidents.adt.list.DynamicList;
 import br.otaviof.czech_accidents.adt.queue.LinkedQueue;
 import br.otaviof.czech_accidents.adt.queue.Queue;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,20 @@ class LinkedQueueTest {
         queue = new LinkedQueue<>(5);
     }
 
+    /**
+     * Deve ser possível copiar os dados a partir de outra estrutura de dados abstrata
+     */
+    @Test
+    void testCopyOver() {
+        final DynamicList<Integer> list = new DynamicList<>();
+        list.append(3);
+        list.append(4);
+        list.append(5);
+
+        final LinkedQueue<Integer> testQueue = new LinkedQueue<>(list);
+
+        assertArrayEquals(list.toArray(), testQueue.toArray());
+    }
     /**
      * Após adicionar um elemento, a fila deve possuir esse elemento
      */

@@ -32,19 +32,19 @@ public class LinkedStack<T> implements Stack<T>  {
 
     /**
      * Cria uma instância baseada nos dados de outra coleção.
-     * A coleção possui tamanho ilimitado.
      * @param collection Uma coleção abstrata de dados
      */
     public LinkedStack(AbstractDataType<T> collection) {
+        this.head.setNext(this.tail);
         final Iterator<T> iter = collection.getIterator();
-        LinkedNode<T> last = this.head;
+        int length = 0;
         while(iter.hasNext()) {
             final LinkedNode<T> newNode = new LinkedNode<>(iter.next());
-            last.setNext(newNode);
-            last = newNode;
+            newNode.setNext(this.head.getNext());
+            this.head.setNext(newNode);
+            length++;
         }
-        last.setNext(this.tail);
-        this.size = NO_LIMIT;
+        this.size = length;
     }
 
     /**

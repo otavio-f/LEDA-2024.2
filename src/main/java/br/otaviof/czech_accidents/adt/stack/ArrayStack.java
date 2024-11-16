@@ -1,5 +1,6 @@
 package br.otaviof.czech_accidents.adt.stack;
 
+import br.otaviof.czech_accidents.adt.AbstractDataType;
 import br.otaviof.czech_accidents.adt.EmptyException;
 import br.otaviof.czech_accidents.adt.FullException;
 import br.otaviof.czech_accidents.utils.GenericsUtils;
@@ -28,6 +29,26 @@ public class ArrayStack<T> implements Stack<T> {
 
         this.data = GenericsUtils.createArrayOfSize(size);
         this.top = 0;
+    }
+
+    /**
+     * Cria uma instância baseada nos dados de outra coleção.
+     * @param collection Uma coleção abstrata de dados
+     */
+    public ArrayStack(AbstractDataType<T> collection) {
+        int count = 0;
+        Iterator<T> iter = collection.getIterator();
+        while(iter.hasNext()) {
+            count++;
+            iter.next();
+        }
+
+        this.data = GenericsUtils.createArrayOfSize(count);
+        iter = collection.getIterator();
+        for(int i=0; i<count; i++) {
+            this.data[i] = iter.next();
+        }
+        this.top = this.data.length;
     }
 
     @Override

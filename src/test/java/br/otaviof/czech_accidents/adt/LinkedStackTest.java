@@ -1,5 +1,6 @@
 package br.otaviof.czech_accidents.adt;
 
+import br.otaviof.czech_accidents.adt.list.LinkedList;
 import br.otaviof.czech_accidents.adt.stack.LinkedStack;
 import br.otaviof.czech_accidents.adt.stack.Stack;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,21 @@ class LinkedStackTest {
     @BeforeEach
     void setup() {
         stack = new LinkedStack<>(5);
+    }
+
+    /**
+     * Deve ser possível copiar os dados a partir de outra estrutura de dados abstrata
+     */
+    @Test
+    void testCopyOver() {
+        final LinkedList<Integer> list = new LinkedList<>();
+        list.append(3);
+        list.append(4);
+        list.append(5);
+
+        final LinkedStack<Integer> testStack = new LinkedStack<>(list);
+
+        assertArrayEquals(new Integer[] {5, 4, 3}, testStack.toArray());
     }
 
     /**

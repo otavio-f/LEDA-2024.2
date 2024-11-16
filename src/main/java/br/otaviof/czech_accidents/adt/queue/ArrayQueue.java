@@ -31,6 +31,25 @@ public class ArrayQueue<T> implements Queue<T> {
         this.isEmpty = true;
     }
 
+    /**
+     * Cria uma instância baseada nos dados de outra coleção
+     * @param collection Uma coleção abstrata de dados
+     */
+    public ArrayQueue(AbstractDataType<T> collection) {
+        int count = 0;
+        Iterator<T> iter = collection.getIterator();
+        while(iter.hasNext()) {
+            count++;
+            iter.next();
+        }
+
+        this.data = GenericsUtils.createArrayOfSize(count);
+        iter = collection.getIterator();
+        for(int i=0; i<count; i++) {
+            this.data[i] = iter.next();
+        }
+    }
+
     @Override
     public void enqueue(T item) {
         if(this.isFull())
