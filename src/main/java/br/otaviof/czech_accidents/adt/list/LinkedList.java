@@ -237,6 +237,32 @@ public class LinkedList<T extends Comparable<? super T>> implements CustomList<T
     }
 
     @Override
+    public T replace(int index, T item) {
+        if(this.isEmpty())
+            throw new EmptyException();
+
+        if(index < 0)
+            throw new IndexOutOfBoundsException();
+
+        LinkedNode<T> before = this.head;
+        while(index > 0) {
+            before = before.getNext();
+            if(before.getNext() == this.tail)
+                throw new IndexOutOfBoundsException();
+            index--;
+        }
+
+        LinkedNode<T> target = before.getNext();
+        T result = target.getData();
+
+        LinkedNode<T> newNode = new LinkedNode<>(item);
+        newNode.setNext(target.getNext());
+        before.setNext(newNode);
+
+        return result;
+    }
+
+    @Override
     public T[] toArray() {
         final int length = this.getSize();
         T[] result = GenericsUtils.createArrayOfSize(length);

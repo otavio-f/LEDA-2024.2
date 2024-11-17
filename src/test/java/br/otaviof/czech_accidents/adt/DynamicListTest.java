@@ -400,6 +400,51 @@ class DynamicListTest {
     }
 
     /**
+     * Substituir insere o item na lista e retorna o item antigo
+     */
+    @Test
+    void testReplace() {
+        list.append(1);
+        list.append(2);
+        list.append(3);
+        list.append(4);
+        list.append(5);
+
+        assertEquals(3, list.replace(2, 100));
+        assertArrayEquals(new Integer[] {1, 2, 100, 4, 5}, list.toArray());
+    }
+
+    /**
+     * Não deve ser possível substituir itens em uma lista vazia
+     */
+    @Test
+    void testReplaceOnEmptyThrows() {
+        assertThrowsExactly(EmptyException.class, () -> {
+            list.replace(0, 0);
+        });
+    }
+
+    /**
+     * Substituir itens em índice inválido deve causar exceção
+     */
+    @Test
+    void testReplaceOnInvalidThrows() {
+        list.append(TestUtils.genInt());
+
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.replace(1, 0);
+        });
+
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.replace(-1, 0);
+        });
+
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.replace(999, 0);
+        });
+    }
+
+    /**
      * O array de uma lista é a representação dos elementos contidos na lista na mesma ordem de inserção.
      */
     @Test

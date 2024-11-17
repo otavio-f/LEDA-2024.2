@@ -177,6 +177,18 @@ public class DynamicList<T extends Comparable<? super T>> implements CustomList<
     }
 
     @Override
+    public T replace(int index, T item) {
+        if(this.isEmpty())
+            throw new EmptyException();
+
+        if(index < 0 || index >= this.data.length)
+            throw new IndexOutOfBoundsException();
+        T result = this.data[index];
+        this.data[index] = item;
+        return result;
+    }
+
+    @Override
     public T[] toArray() {
         T[] result = GenericsUtils.createArrayOfSize(this.insertAt);
 

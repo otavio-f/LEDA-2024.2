@@ -93,4 +93,13 @@ public interface CustomList<T extends Comparable<? super T>> extends AbstractDat
      */
     T maximum();
 
+    /**
+     * Substitui o elemento no índice por outro elemento
+     * @param index O índice do elemento a ser substituído
+     * @param item O item que vai ser inserido
+     * @return O item que foi substituído
+     * @throws EmptyException se a lista está vazia
+     * @throws IndexOutOfBoundsException se o índice é inválido
+     */
+    T replace(int index, T item);
 }
