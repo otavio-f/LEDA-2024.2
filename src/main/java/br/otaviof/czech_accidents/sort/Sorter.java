@@ -7,30 +7,34 @@ import br.otaviof.czech_accidents.adt.queue.CustomQueue;
 import java.util.Iterator;
 
 public class Sorter<T extends Comparable<? super T>> {
-    //TODO: CHANGE SORTERS TO USE LIST<T>
-    //TODO: Use buckets to sort
-    //SORT BUCKETS (MULTITHREAD?), GET INDEX QUEUES
-    //JOIN INDEX QUEUES INTO ONE
-    //RETURN BIG INDEX QUEUE
 
-    private CustomQueue<CustomList<T>> buckets;
-    private Method method;
+    private final CustomQueue<CustomList<T>> buckets;
+    private final Method method;
 
-    private Sorter(CustomList<T> in) {
+    private Sorter(CustomList<T> in, Method method) {
+        this.method = method;
         this.buckets = new LinkedQueue<>();
-        //DIVIDE IN BUCKETS BY RANGE (TEST LENGTHS FOR OPTIMAL NUMBER OF BUCKETS)
-        //TODO: How to decide which element gets in whick bucket? (Aiming to distribute elements evenly)
-        //TIP: USE MAXIMUM/MINIMUM RANGE AND BUCKET SIZES
+        //TODO: Decidir a quantidade de baldes
+        //Tente deixar os baldes com o mesmo número de elementos
+        //TODO: Separar elementos nos baldes
+        //Use intervalo entre maximum()/minimum() ou quantidade de elementos
     }
 
-    private void sort() {
-        CustomQueue<Integer> output = new LinkedQueue<>();
+    private CustomQueue<Integer> sort() {
+        // Resultado final
+        CustomQueue<Integer> result = new LinkedQueue<>();
+
+        // iterador sobre os baldes
         Iterator<CustomList<T>> iter = this.buckets.getIterator();
         while(iter.hasNext()) {
-            Iterator<Integer> partial = this.method.sort(iter.next()).getIterator();
-            while(partial.hasNext())
-                output.enqueue(partial.next());
-        }
-    }
+            // ordena cada balde
+            CustomQueue<Integer> output = this.method.sort(iter.next());
 
+            // adiciona resultado parcial ao resultado final
+            Iterator<Integer> partial = output.getIterator();
+            while(partial.hasNext())
+                result.enqueue(partial.next());
+        }
+        return result;
+    }
 }

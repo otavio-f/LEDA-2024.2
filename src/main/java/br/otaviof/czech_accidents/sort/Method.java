@@ -13,6 +13,6 @@ public interface Method {
      * @param data o conjunto de dados a ser ordenado
      * @return O conjunto ordenado
      */
-    CustomQueue<Integer> sort(CustomList data);
+    CustomQueue<Integer> sort(CustomList<?> data);
     //aqui vai unchecked mesmo, o tipo do dado só deve importar mais adiante
 }
