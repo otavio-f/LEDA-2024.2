@@ -1,4 +1,4 @@
-package br.otaviof.czech_accidents.sort;
+package br.otaviof.czech_accidents.sorters;
 
 import org.junit.jupiter.api.Test;
 

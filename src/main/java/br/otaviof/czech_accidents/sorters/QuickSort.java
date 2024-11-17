@@ -1,24 +1,12 @@
-package br.otaviof.czech_accidents.sort;
+package br.otaviof.czech_accidents.sorters;
 
-public class QuickSortMedianThree<T extends Comparable<? super T>> extends SortingMethod<T> {
+public class QuickSort<T extends Comparable<? super T>> extends SortMethod<T> {
 
-    public QuickSortMedianThree(T[] data) {
+    public QuickSort(T[] data) {
         super(data);
     }
 
-    private int medianOfThree(int a, int b, int c) {
-        Data<T> dta = this.data[a];
-        Data<T> dtb = this.data[b];
-        Data<T> dtc = this.data[c];
-        if((dta.compareTo(dtb) > 0) ^ (dta.compareTo(dtc) > 0))
-            return a;
-        if((dtb.compareTo(dta) > 0) ^ (dtb.compareTo(dtc) > 0))
-            return b;
-        return c;
-    }
-
     private int partition(int p, int r) {
-        swap(medianOfThree(p, r, (r-p)/2), r);
         Data<T> x = this.data[r];
         int i = p - 1;
         for (int j = p; j < r; j++) {

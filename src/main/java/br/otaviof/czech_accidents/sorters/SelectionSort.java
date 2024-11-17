@@ -1,6 +1,6 @@
-package br.otaviof.czech_accidents.sort;
+package br.otaviof.czech_accidents.sorters;
 
-public class SelectionSort<T extends Comparable<? super T>> extends SortingMethod<T> {
+public class SelectionSort<T extends Comparable<? super T>> extends SortMethod<T> {
 
     public SelectionSort(T data[]) {
         super(data);

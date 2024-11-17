@@ -1,6 +1,10 @@
-package br.otaviof.czech_accidents.sort;
+package br.otaviof.czech_accidents.sorters;
 
-public class CountingSort extends SortingMethod<Integer> {
+/**
+ * Implementação do método de ordenação counting sort
+ * @author otavio-f
+ */
+public class CountingSort extends SortMethod<Integer> {
 
     public CountingSort(Integer[] data) {
         super(data);
