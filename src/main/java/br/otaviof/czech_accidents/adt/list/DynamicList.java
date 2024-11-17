@@ -13,7 +13,7 @@ import java.util.Objects;
  * Implementa a interface lista sobre um array variável
  * @param <T> Um tipo genérico
  */
-public class DynamicList<T extends Comparable<? super T>> implements List<T> {
+public class DynamicList<T extends Comparable<? super T>> implements CustomList<T> {
     private T[] data;
     private int insertAt;
 

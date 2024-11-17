@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
  * @param <T> tipo genérico
  * @author otavio-f
  */
-public class LinkedStack<T> implements Stack<T>  {
+public class LinkedStack<T> implements CustomStack<T> {
     private static final int NO_LIMIT = -1;
 
     private final LinkedNode<T> head = new LinkedNode<>(null);
@@ -83,7 +83,7 @@ public class LinkedStack<T> implements Stack<T>  {
     }
 
     @Override
-    public Stack<T> multipop(int k) {
+    public CustomStack<T> multipop(int k) {
         if(this.isEmpty())
             throw new EmptyException();
 

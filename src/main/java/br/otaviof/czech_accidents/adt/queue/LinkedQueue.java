@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
  * @param <T>
  * @author otavio-f
  */
-public class LinkedQueue<T> implements Queue<T> {
+public class LinkedQueue<T> implements CustomQueue<T> {
     private static final int NO_LIMIT = -1;
 
     private final int size;

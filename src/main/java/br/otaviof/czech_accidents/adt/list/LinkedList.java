@@ -14,7 +14,7 @@ import java.util.Objects;
  * @author otavio-f
  * Implementação de lista encadeada usando nodos sentinelas
  */
-public class LinkedList<T extends Comparable<? super T>> implements List<T> {
+public class LinkedList<T extends Comparable<? super T>> implements CustomList<T> {
 
     private final LinkedNode<T> head = new LinkedNode<>(null);
     private final LinkedNode<T> tail = new LinkedNode<>(null);

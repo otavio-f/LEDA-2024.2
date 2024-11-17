@@ -1,8 +1,8 @@
 package br.otaviof.czech_accidents.adt;
 
 import br.otaviof.czech_accidents.adt.list.DynamicList;
-import br.otaviof.czech_accidents.adt.list.List;
-import br.otaviof.czech_accidents.adt.queue.ArrayQueue;
+import br.otaviof.czech_accidents.adt.list.CustomList;
+import br.otaviof.czech_accidents.adt.queue.DynamicQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.TestUtils;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class DynamicListTest {
 
-    List<Integer> list;
+    CustomList<Integer> list;
 
     /**
      * Cria uma nova lista antes de cada teste
@@ -32,7 +32,7 @@ class DynamicListTest {
      */
     @Test
     void testCopyOver() {
-        final ArrayQueue<Integer> queue = new ArrayQueue<>(5);
+        final DynamicQueue<Integer> queue = new DynamicQueue<>(5);
         queue.enqueue(3);
         queue.enqueue(4);
         queue.enqueue(5);

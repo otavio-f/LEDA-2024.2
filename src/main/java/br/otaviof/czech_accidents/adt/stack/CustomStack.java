@@ -8,7 +8,7 @@ import br.otaviof.czech_accidents.adt.EmptyException;
  * @param <T> Um tipo genérico comparável
  * @author otavio-f
  */
-public interface Stack<T> extends AbstractDataType<T> {
+public interface CustomStack<T> extends AbstractDataType<T> {
 
     /**
      * Adiciona um elemento no topo da pilha
@@ -35,7 +35,7 @@ public interface Stack<T> extends AbstractDataType<T> {
      * @throws EmptyException se a pilha estiver vazia
      * @throws IllegalArgumentException se a quantidade de elementos desempilhados for menor ou igual a zero
      */
-    Stack<T> multipop(int k);
+    CustomStack<T> multipop(int k);
 
     /**
      * Verifica se a pilha não contém itens

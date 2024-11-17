@@ -3,28 +3,26 @@ package br.otaviof.czech_accidents.adt.list;
 import br.otaviof.czech_accidents.adt.AbstractDataType;
 import br.otaviof.czech_accidents.adt.EmptyException;
 
-import java.util.Iterator;
-
 /**
  * @author otavio-f
  * Representa uma lista de elementos de mesmo tipo
  * @param <T> Um tipo genérico comparável
  */
-public interface List<T extends Comparable<? super T>> extends AbstractDataType<T> {
+public interface CustomList<T extends Comparable<? super T>> extends AbstractDataType<T> {
     /**
      * Insere um item no final dessa lista
-     * @param item
+     * @param item a ser adicionado
      */
-    public void append(T item);
+    void append(T item);
 
     /**
      * Insere um item em uma posição específica.
      * Inserindo na posição determinada por List.size() insere após o último item
-     * @param item
-     * @param index
+     * @param item a ser adicionado
+     * @param index a posição do item
      * @throws IndexOutOfBoundsException se o índice for menor que 0 ou maior que o tamanho dessa lista
      */
-    public void insertAt(T item, int index);
+    void insertAt(T item, int index);
 
     /**
      * Remove e retorna um item pelo índice
@@ -33,59 +31,59 @@ public interface List<T extends Comparable<? super T>> extends AbstractDataType<
      * @throws EmptyException se a lista está vazia
      * @throws IndexOutOfBoundsException se o índice for inválido
      */
-    public T pop(int index);
+    T pop(int index);
 
     /**
      * Troca dois itens de posição de acordo com seus índices
-     * @param i
-     * @param j
+     * @param i primeiro índice
+     * @param j segundo índice
      * @throws EmptyException se a lista está vazia
      * @throws IndexOutOfBoundsException se algum dos índices não for válido
      */
-    public void swap(int i, int j);
+    void swap(int i, int j);
 
     /**
      * Calcula a quantidade de elementos contidos nessa lista
      * @return O tamanho da lista
      */
-    public int getSize();
+    int getSize();
 
     /**
      * Identifica se a lista está vazia
      * @return true se a lista não tem nenhum elemento, senão retorna false
      */
-    public boolean isEmpty();
+    boolean isEmpty();
 
     /**
      * Checa se a lista contém um item
-     * @param item
+     * @param item a ser checado
      * @return true se existe um item igual a esse, senão false
      * @throws EmptyException se a lista está vazia
      */
-    public boolean contains(T item);
+    boolean contains(T item);
 
     /**
      * Obtém o item no índice especificado
-     * @param index
+     * @param index índice do item
      * @return O item no índice
      * @throws EmptyException se a lista está vazia
      * @throws IndexOutOfBoundsException se o índice é inválido
      */
-    public T getAt(int index);
+    T getAt(int index);
 
     /**
      * Calcula o índice do item
      * @param item o item a ser encontrado
      * @return O índice do item, ou -1 se não foi encontrado
      */
-    public int indexOf(T item);
+    int indexOf(T item);
 
     /**
      * Calcula o menor item na lista
      * @return o menor item
      * @throws EmptyException se a lista está vazia
      */
-    public T minimum();
+    T minimum();
 
     /**
      * Calcula o maior item na lista
@@ -93,6 +91,6 @@ public interface List<T extends Comparable<? super T>> extends AbstractDataType<
      * @return O maior item
      * @throws EmptyException se a lista está vazia
      */
-    public T maximum();
+    T maximum();
 
 }

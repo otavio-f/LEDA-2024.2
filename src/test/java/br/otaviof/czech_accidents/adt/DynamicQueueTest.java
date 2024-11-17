@@ -1,8 +1,8 @@
 package br.otaviof.czech_accidents.adt;
 
 import br.otaviof.czech_accidents.adt.list.DynamicList;
-import br.otaviof.czech_accidents.adt.queue.ArrayQueue;
-import br.otaviof.czech_accidents.adt.queue.Queue;
+import br.otaviof.czech_accidents.adt.queue.DynamicQueue;
+import br.otaviof.czech_accidents.adt.queue.CustomQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.TestUtils;
@@ -17,16 +17,16 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
  * Classe de teste de unidade para ArrayQueueTest
  * @author otavio-f
  */
-class ArrayQueueTest {
+class DynamicQueueTest {
 
-    public Queue<Integer> queue;
+    public CustomQueue<Integer> queue;
 
     /**
      * Cria uma instância nova de fila com tamanho máximo fixo antes de cada teste
      */
     @BeforeEach
     void setup() {
-        queue = new ArrayQueue<>(5);
+        queue = new DynamicQueue<>(5);
     }
 
     /**
@@ -39,7 +39,7 @@ class ArrayQueueTest {
         list.append(4);
         list.append(5);
 
-        final ArrayQueue<Integer> testQueue = new ArrayQueue<>(list);
+        final DynamicQueue<Integer> testQueue = new DynamicQueue<>(list);
 
         assertArrayEquals(list.toArray(), testQueue.toArray());
     }

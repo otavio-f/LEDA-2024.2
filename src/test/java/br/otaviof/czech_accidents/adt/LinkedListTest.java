@@ -2,9 +2,8 @@ package br.otaviof.czech_accidents.adt;
 
 import br.otaviof.czech_accidents.adt.list.DynamicList;
 import br.otaviof.czech_accidents.adt.list.LinkedList;
-import br.otaviof.czech_accidents.adt.list.List;
-import br.otaviof.czech_accidents.adt.queue.ArrayQueue;
-import br.otaviof.czech_accidents.adt.stack.ArrayStack;
+import br.otaviof.czech_accidents.adt.list.CustomList;
+import br.otaviof.czech_accidents.adt.stack.DynamicStack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.TestUtils;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
  */
 class LinkedListTest {
 
-    List<Integer> list;
+    CustomList<Integer> list;
 
     /**
      * Cria uma nova lista antes de cada teste
@@ -38,7 +37,7 @@ class LinkedListTest {
      */
     @Test
     void testCopyOver() {
-        final ArrayStack<Integer> stack = new ArrayStack<>(5);
+        final DynamicStack<Integer> stack = new DynamicStack<>(5);
         stack.push(3);
         stack.push(4);
         stack.push(5);

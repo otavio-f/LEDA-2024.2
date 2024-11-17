@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
  * @author otavio-f
  * @param <T> um tipo comparável
  */
-public class ArrayQueue<T> implements Queue<T> {
+public class DynamicQueue<T> implements CustomQueue<T> {
 
     private final T[] data;
     private int tail;
@@ -24,7 +24,7 @@ public class ArrayQueue<T> implements Queue<T> {
      * Inicia uma fila de tamanho máximo fixo
      * @param size O tamanho máximo da fila
      */
-    public ArrayQueue(int size) {
+    public DynamicQueue(int size) {
         this.data = GenericsUtils.createArrayOfSize(size);
         this.head = 0;
         this.tail = 0;
@@ -35,7 +35,7 @@ public class ArrayQueue<T> implements Queue<T> {
      * Cria uma instância baseada nos dados de outra coleção
      * @param collection Uma coleção abstrata de dados
      */
-    public ArrayQueue(AbstractDataType<T> collection) {
+    public DynamicQueue(AbstractDataType<T> collection) {
         int count = 0;
         Iterator<T> iter = collection.getIterator();
         while(iter.hasNext()) {

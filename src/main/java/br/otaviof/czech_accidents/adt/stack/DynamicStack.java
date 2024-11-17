@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
  * @param <T> Um tipo genérico
  * @author otavio-f
  */
-public class ArrayStack<T> implements Stack<T> {
+public class DynamicStack<T> implements CustomStack<T> {
 
     private final T[] data;
     private int top;
@@ -23,7 +23,7 @@ public class ArrayStack<T> implements Stack<T> {
      * @param size A quantidade máxima de itens que essa pilha pode conter
      * @throws IllegalArgumentException se a quantidade for menor ou igual a zero
      */
-    public ArrayStack(int size) {
+    public DynamicStack(int size) {
         if(size <= 0)
             throw new IllegalArgumentException();
 
@@ -35,7 +35,7 @@ public class ArrayStack<T> implements Stack<T> {
      * Cria uma instância baseada nos dados de outra coleção.
      * @param collection Uma coleção abstrata de dados
      */
-    public ArrayStack(AbstractDataType<T> collection) {
+    public DynamicStack(AbstractDataType<T> collection) {
         int count = 0;
         Iterator<T> iter = collection.getIterator();
         while(iter.hasNext()) {
@@ -79,7 +79,7 @@ public class ArrayStack<T> implements Stack<T> {
     }
 
     @Override
-    public Stack<T> multipop(int k) {
+    public CustomStack<T> multipop(int k) {
         if(k<=0)
             throw new IllegalArgumentException();
         if(this.isEmpty())
@@ -89,7 +89,7 @@ public class ArrayStack<T> implements Stack<T> {
             k = this.top;
         }
 
-        ArrayStack<T> result = new ArrayStack<>(k);
+        DynamicStack<T> result = new DynamicStack<>(k);
         for(int i=0; i<k; i++)
             result.push(this.pop());
 

@@ -2,7 +2,7 @@ package br.otaviof.czech_accidents.adt;
 
 import br.otaviof.czech_accidents.adt.list.LinkedList;
 import br.otaviof.czech_accidents.adt.stack.LinkedStack;
-import br.otaviof.czech_accidents.adt.stack.Stack;
+import br.otaviof.czech_accidents.adt.stack.CustomStack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.TestUtils;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class LinkedStackTest {
 
-    public Stack<Integer> stack;
+    public CustomStack<Integer> stack;
 
     /**
      * Cria uma instância nova de pilha com tamanho máximo fixo antes de cada teste
@@ -81,7 +81,7 @@ class LinkedStackTest {
         stack.push(2);
         stack.push(3);
 
-        Stack<Integer> test = stack.multipop(3);
+        CustomStack<Integer> test = stack.multipop(3);
 
         assertEquals(1, test.pop()); // multipop deixa na ordem reversa, pop deixa na ordem certa de novo
         assertEquals(2, test.pop());
@@ -96,7 +96,7 @@ class LinkedStackTest {
         stack.push(1);
         stack.push(2);
 
-        Stack<Integer> test = stack.multipop(100);
+        CustomStack<Integer> test = stack.multipop(100);
         assertEquals(1, test.pop());
         assertEquals(2, test.pop());
 

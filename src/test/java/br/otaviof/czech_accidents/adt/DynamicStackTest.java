@@ -1,8 +1,8 @@
 package br.otaviof.czech_accidents.adt;
 
-import br.otaviof.czech_accidents.adt.queue.ArrayQueue;
-import br.otaviof.czech_accidents.adt.stack.ArrayStack;
-import br.otaviof.czech_accidents.adt.stack.Stack;
+import br.otaviof.czech_accidents.adt.queue.DynamicQueue;
+import br.otaviof.czech_accidents.adt.stack.DynamicStack;
+import br.otaviof.czech_accidents.adt.stack.CustomStack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.TestUtils;
@@ -16,16 +16,16 @@ import static org.junit.jupiter.api.Assertions.*;
  * Classe de teste de unidade para ArrayStack
  * @author otavio-f
  */
-class ArrayStackTest {
+class DynamicStackTest {
 
-    public Stack<Integer> stack;
+    public CustomStack<Integer> stack;
 
     /**
      * Cria uma instância nova de pilha com tamanho máximo fixo antes de cada teste
      */
     @BeforeEach
     void setup() {
-        stack = new ArrayStack<>(5);
+        stack = new DynamicStack<>(5);
     }
 
     /**
@@ -33,12 +33,12 @@ class ArrayStackTest {
      */
     @Test
     void testCopyOver() {
-        final ArrayQueue<Integer> queue = new ArrayQueue<>(5);
+        final DynamicQueue<Integer> queue = new DynamicQueue<>(5);
         queue.enqueue(3);
         queue.enqueue(4);
         queue.enqueue(5);
 
-        final ArrayStack<Integer> testStack = new ArrayStack<>(queue);
+        final DynamicStack<Integer> testStack = new DynamicStack<>(queue);
 
         assertArrayEquals(new Integer[] {5, 4, 3}, testStack.toArray());
     }
@@ -81,7 +81,7 @@ class ArrayStackTest {
         stack.push(2);
         stack.push(3);
 
-        Stack<Integer> test = stack.multipop(3);
+        CustomStack<Integer> test = stack.multipop(3);
 
         assertEquals(1, test.pop()); // multipop deixa na ordem reversa, pop deixa na ordem certa de novo
         assertEquals(2, test.pop());
@@ -96,7 +96,7 @@ class ArrayStackTest {
         stack.push(1);
         stack.push(2);
 
-        Stack<Integer> test = stack.multipop(100);
+        CustomStack<Integer> test = stack.multipop(100);
         assertEquals(1, test.pop());
         assertEquals(2, test.pop());
 
