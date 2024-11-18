@@ -112,9 +112,24 @@ public class DynamicList<T extends Comparable<? super T>> implements CustomList<
             throw new IndexOutOfBoundsException();
         }
 
+        if(i==j)
+            return;
+
         T temp = this.data[i];
         this.data[i] = this.data[j];
         this.data[j] = temp;
+    }
+
+    @Override
+    public int compare(int i, int j) {
+        if(this.isEmpty())
+            throw new EmptyException();
+
+        if(i < 0 || j < 0 || i >= this.insertAt || j >= this.insertAt) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        return this.data[i].compareTo(this.data[j]);
     }
 
     @Override

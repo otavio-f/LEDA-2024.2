@@ -43,6 +43,18 @@ public interface CustomList<T extends Comparable<? super T>> extends AbstractDat
     void swap(int i, int j);
 
     /**
+     * Compara os itens nos índices
+     * @param i O primeiro elemento
+     * @param j O segundo elemento
+     * @return 0 se o primeiro é igual ao segundo,
+     * -1 se o primeiro é menor que o segundo,
+     * 1 se o primeiro é maior que o segundo.
+     * @throws EmptyException se a lista está vazia
+     * @throws IndexOutOfBoundsException se algum dos índices não for válido
+     */
+    int compare(int i, int j);
+
+    /**
      * Calcula a quantidade de elementos contidos nessa lista
      * @return O tamanho da lista
      */
@@ -102,4 +114,5 @@ public interface CustomList<T extends Comparable<? super T>> extends AbstractDat
      * @throws IndexOutOfBoundsException se o índice é inválido
      */
     T replace(int index, T item);
+
 }

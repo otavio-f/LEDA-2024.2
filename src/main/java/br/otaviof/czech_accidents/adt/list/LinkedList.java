@@ -95,8 +95,6 @@ public class LinkedList<T extends Comparable<? super T>> implements CustomList<T
             throw new EmptyException();
         if (i < 0 || j < 0)
             throw new IndexOutOfBoundsException();
-        if (i == j) // nao faz nada se forem iguais
-            return;
         if (j < i) { // menor indice sempre vai ser <i>
             int temp = i;
             i = j;
@@ -107,7 +105,7 @@ public class LinkedList<T extends Comparable<? super T>> implements CustomList<T
         int count = 0;
         LinkedNode<T> temp = this.head;
         while (count < i) {
-            if (temp.getNext() == this.tail)
+            if (temp.getNext().getNext() == this.tail)
                 throw new IndexOutOfBoundsException();
             temp = temp.getNext();
             count++;
@@ -116,7 +114,7 @@ public class LinkedList<T extends Comparable<? super T>> implements CustomList<T
 
         // recupera nodo anterior a <j>
         while (count < j) {
-            if (temp.getNext() == this.tail)
+            if (temp.getNext().getNext() == this.tail)
                 throw new IndexOutOfBoundsException();
             temp = temp.getNext();
             count++;
@@ -139,6 +137,51 @@ public class LinkedList<T extends Comparable<? super T>> implements CustomList<T
         temp = node_i.getNext();
         node_i.setNext(node_j.getNext());
         node_j.setNext(temp);
+    }
+
+
+    @Override
+    public int compare(int i, int j) {
+        if (this.isEmpty())
+            throw new EmptyException();
+        if (i < 0 || j < 0)
+            throw new IndexOutOfBoundsException();
+
+        T first = null;
+        T second = null;
+        LinkedNode<T> temp = this.head.getNext();
+
+        while(i != 0 && j != 0) {
+            if(temp.getNext() == this.tail)
+                throw new IndexOutOfBoundsException();
+            temp = temp.getNext();
+            i--;
+            j--;
+        }
+
+        if(i==0) {
+            first = temp.getData();
+            i = -1;
+        } else {
+            second = temp.getData();
+            j = -1;
+        }
+
+        while(i != 0 && j != 0) {
+            if(temp.getNext() == this.tail)
+                throw new IndexOutOfBoundsException();
+            temp = temp.getNext();
+            i--;
+            j--;
+        }
+
+        if(i==0) {
+            first = temp.getData();
+        } else {
+            second = temp.getData();
+        }
+
+        return first.compareTo(second);
     }
 
     @Override

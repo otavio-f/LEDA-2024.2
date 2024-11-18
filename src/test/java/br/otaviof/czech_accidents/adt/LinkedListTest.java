@@ -223,6 +223,55 @@ class LinkedListTest {
         assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
             list.swap(1, -1);
         });
+
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.swap(2, 2);
+        });
+    }
+
+    /**
+     * O resultado da comparação de dois elementos deve apontar a comparação do primeiro relativo ao segundo
+     */
+    @Test
+    void testCompare() {
+        list.append(3);
+        list.append(6);
+        list.append(9);
+        list.append(12);
+
+        assertEquals(-1, list.compare(0, 2));
+        assertEquals(list.getAt(0).compareTo(list.getAt(2)), list.compare(0, 2));
+    }
+
+    /**
+     * Comparar elementos em uma lista vazia deve gerar uma exceção
+     */
+    @Test
+    void testCompareOnEmptyThrows() {
+        assertThrowsExactly(EmptyException.class, () -> {
+            list.compare(0, 1);
+        });
+    }
+
+    /**
+     * Comparar elementos em posições inválidas deve gerar uma exceção
+     */
+    @Test
+    void testCompareInvalidThrows() {
+        list.append(3);
+        list.append(6);
+
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.compare(0, 333);
+        });
+
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.compare(1, -1);
+        });
+
+        assertThrowsExactly(IndexOutOfBoundsException.class, () -> {
+            list.compare(2, 2);
+        });
     }
 
     /**
