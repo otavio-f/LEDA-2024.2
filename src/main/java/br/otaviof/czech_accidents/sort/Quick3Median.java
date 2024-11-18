@@ -7,12 +7,12 @@ import br.otaviof.czech_accidents.adt.queue.CustomQueue;
  * Implementação do método de ordenação quick sort com mediana de 3
  * @author otavio-f
  */
-public class Quick3Median implements Method {
+public class Quick3Median<T extends Comparable<? super T>> implements Method<T> {
 
     public Quick3Median() {}
 
     @Override
-    public CustomQueue<Integer> sort(CustomList<?> data) {
+    public CustomQueue<Integer> sort(CustomList<T> data) {
         return null;
     }
 }

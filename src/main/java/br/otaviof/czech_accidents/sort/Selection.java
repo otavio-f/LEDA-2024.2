@@ -7,12 +7,12 @@ import br.otaviof.czech_accidents.adt.queue.CustomQueue;
  * Implementação do método de ordenação selection sort
  * @author otavio-f
  */
-public class Selection implements Method {
+public class Selection<T extends Comparable<? super T>> implements Method<T> {
 
     public Selection() {}
 
     @Override
-    public CustomQueue<Integer> sort(CustomList<?> data) {
+    public CustomQueue<Integer> sort(CustomList<T> data) {
         return null;
     }
 }

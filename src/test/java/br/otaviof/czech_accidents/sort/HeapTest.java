@@ -20,11 +20,11 @@ import static utils.TestUtils.isOrdered;
  * @author otavio-f
  */
 class HeapTest {
-    private Method method;
+    private Method<Integer> method;
 
     @BeforeEach
     void setup() {
-        method = new Heap();
+        method = new Heap<>();
     }
 
     /**
@@ -40,11 +40,11 @@ class HeapTest {
         sample.append(2);
         sample.append(5);
 
-        Integer[] correctOrder = { 0, 4, 2, 3, 1, 5 };
-        Integer[] altOrder = { 0, 4, 2, 3, 5, 1 };
-
         CustomQueue<Integer> order = method.sort(sample);
 
-        assertArrayEquals(new Integer[] {0, 4, 2, 3, 1, 5}, order.toArray());
+        assertTrue(
+                Arrays.equals(new Integer[] {0, 4, 2, 3, 1, 5}, order.toArray()) ||
+                        Arrays.equals(new Integer[] {0, 4, 2, 3, 5, 1}, order.toArray())
+        );
     }
 }

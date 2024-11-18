@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
  * @author otavio-f
  */
 class CountingTest {
-    private Method method;
+    private Counting method;
 
     @BeforeEach
     void setup() {
@@ -32,9 +32,6 @@ class CountingTest {
         sample.append(4);
         sample.append(2);
         sample.append(5);
-
-        Integer[] correctOrder = { 0, 4, 2, 3, 1, 5 };
-        Integer[] altOrder = { 0, 4, 2, 3, 5, 1 };
 
         CustomQueue<Integer> order = method.sort(sample);
 

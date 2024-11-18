@@ -1,40 +1,58 @@
 package br.otaviof.czech_accidents.sort;
 
 import br.otaviof.czech_accidents.adt.list.CustomList;
-import br.otaviof.czech_accidents.adt.queue.LinkedQueue;
+import br.otaviof.czech_accidents.adt.queue.DynamicQueue;
 import br.otaviof.czech_accidents.adt.queue.CustomQueue;
 
 import java.util.Iterator;
 
-public class Sorter<T extends Comparable<? super T>> {
+public final class Sorter<T extends Comparable<? super T>> {
 
-    private final CustomQueue<CustomList<T>> buckets;
-    private final Method method;
+    private Sorter() {}
 
-    private Sorter(CustomList<T> in, Method method) {
-        this.method = method;
-        this.buckets = new LinkedQueue<>();
-        //TODO: Decidir a quantidade de baldes
-        //Tente deixar os baldes com o mesmo número de elementos
-        //TODO: Separar elementos nos baldes
-        //Use intervalo entre maximum()/minimum() ou quantidade de elementos
-    }
-
-    private CustomQueue<Integer> sort() {
-        // Resultado final
-        CustomQueue<Integer> result = new LinkedQueue<>();
-
-        // iterador sobre os baldes
-        Iterator<CustomList<T>> iter = this.buckets.getIterator();
+    private static <T extends Comparable<? super T>> CustomQueue<Integer> sortBy(Method sorter, CustomList<T> data) {
+        CustomQueue<Integer> result = new DynamicQueue<>(data.getSize());
+        BucketSet<T> buckets = new BucketSet<>(data);
+        Iterator<CustomList<T>> iter = buckets.getIterator();
         while(iter.hasNext()) {
-            // ordena cada balde
-            CustomQueue<Integer> output = this.method.sort(iter.next());
-
-            // adiciona resultado parcial ao resultado final
-            Iterator<Integer> partial = output.getIterator();
+            Iterator<Integer> partial = sorter.sort(iter.next()).getIterator();
             while(partial.hasNext())
                 result.enqueue(partial.next());
         }
         return result;
+    }
+
+    public static CustomQueue<Integer> countingSort(CustomList<Integer> data) {
+        CustomQueue<Integer> result = new DynamicQueue<>(data.getSize());
+        Counting sorter = new Counting();
+
+        BucketSet<Integer> buckets = new BucketSet<>(data);
+        Iterator<CustomList<Integer>> iter = buckets.getIterator();
+        while(iter.hasNext()) {
+            Iterator<Integer> partial = sorter.sort(iter.next()).getIterator();
+            while(partial.hasNext())
+                result.enqueue(partial.next());
+        }
+        return result;
+    }
+
+    public static <T extends Comparable<? super T>> CustomQueue<Integer> heapSort(CustomList<T> data) {
+        return sortBy(new Heap(), data);
+    }
+
+    public static <T extends Comparable<? super T>> CustomQueue<Integer> insertionSort(CustomList<T> data) {
+        return sortBy(new Insertion(), data);
+    }
+
+    public static <T extends Comparable<? super T>> CustomQueue<Integer> mergeSort(CustomList<T> data) {
+        return sortBy(new Merge(), data);
+    }
+
+    public static <T extends Comparable<? super T>> CustomQueue<Integer> quickSort(CustomList<T> data) {
+        return sortBy(new Quick(), data);
+    }
+
+    public static <T extends Comparable<? super T>> CustomQueue<Integer> quick3MedianSort(CustomList<T> data) {
+        return sortBy(new Quick3Median(), data);
     }
 }
