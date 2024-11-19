@@ -1,11 +1,9 @@
 package br.otaviof.czech_accidents.io;
 
 import br.otaviof.czech_accidents.adt.list.CustomList;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,11 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * Classe de teste de unidade para leitor de tabelas
  */
 class TableReaderTest {
-
-    @BeforeEach
-    void setUp() {
-    }
-
     /**
      * Deve extrair uma coluna com os dados convertidos na mesma ordem dos dados originais.
      * @throws IOException Se o teste falhar
