@@ -1,4 +1,4 @@
-package br.otaviof.czech_accidents.sort;
+package br.otaviof.czech_accidents.sort.methods;
 
 import br.otaviof.czech_accidents.adt.list.CustomList;
 import br.otaviof.czech_accidents.adt.list.DynamicList;

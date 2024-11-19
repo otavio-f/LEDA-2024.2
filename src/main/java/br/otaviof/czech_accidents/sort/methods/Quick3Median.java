@@ -1,4 +1,4 @@
-package br.otaviof.czech_accidents.sort;
+package br.otaviof.czech_accidents.sort.methods;
 
 import br.otaviof.czech_accidents.adt.list.CustomList;
 import br.otaviof.czech_accidents.adt.queue.CustomQueue;
@@ -12,7 +12,7 @@ public class Quick3Median<T extends Comparable<? super T>> implements Method<T> 
     public Quick3Median() {}
 
     @Override
-    public CustomQueue<Integer> sort(CustomList<T> data) {
-        return null;
+    public void sort(CustomList<T> data) {
+
     }
 }

@@ -1,4 +1,4 @@
-package br.otaviof.czech_accidents.sort;
+package br.otaviof.czech_accidents.sort.methods;
 
 import br.otaviof.czech_accidents.adt.list.CustomList;
 import br.otaviof.czech_accidents.adt.list.DynamicList;
@@ -12,13 +12,12 @@ import br.otaviof.czech_accidents.adt.queue.DynamicQueue;
 public class Heap<T extends Comparable<? super T>> implements Method<T> {
 
     private CustomList<T> data;
-    private CustomList<Integer> result;
 
     public Heap() {}
 
     private void maxHeapify(int i, int heapsize) {
-        final int l = i*2+1;
-        final int r = l+1;
+        final int l = i * 2 + 1;
+        final int r = l + 1;
         int largest = i;
 
         if(l <= heapsize && this.data.compare(l, i) > 0)
@@ -29,7 +28,6 @@ public class Heap<T extends Comparable<? super T>> implements Method<T> {
 
         if(largest != i) {
             this.data.swap(i, largest);
-            this.result.swap(i, largest);
             maxHeapify(largest, heapsize);
         }
     }
@@ -39,26 +37,20 @@ public class Heap<T extends Comparable<? super T>> implements Method<T> {
             maxHeapify(i, heapsize);
         }
     }
+
     @Override
-    public CustomQueue<Integer> sort(CustomList<T> data) {
+    public void sort(CustomList<T> data) {
         final int length = data.getSize();
         this.data = data;
         int heapsize = length - 1;
 
-        this.result = new DynamicList<>();
-        for(int counter = 0; counter < length; counter++)
-            result.append(counter);
-
         buildMaxHeap(heapsize);
         for(int i= length - 1; i > 0; i--) {
             this.data.swap(0, i);
-            this.result.swap(0, i);
             heapsize--;
             maxHeapify(0, heapsize);
             // update
         }
         // update
-
-        return new DynamicQueue<>(this.result);
     }
 }
