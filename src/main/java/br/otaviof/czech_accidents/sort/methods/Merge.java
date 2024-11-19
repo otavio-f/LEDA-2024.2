@@ -24,7 +24,7 @@ public class Merge<T extends Comparable<? super T>> implements Method<T> {
             leftSide.append(this.data.getAt(left+i));
 
         for(i=0; i<right-middle; i++)
-            rightSide.append(this.data.getAt(middle+1+i));
+            rightSide.append(this.data.getAt(middle+i+1));
 
         i=0;
         j=0;
@@ -49,18 +49,17 @@ public class Merge<T extends Comparable<? super T>> implements Method<T> {
         }
 
         while(j < rightSide.getSize()) {
-            this.data.replace(k, rightSide.getAt(i));
+            this.data.replace(k, rightSide.getAt(j));
             j++;
             k++;
         }
-        //todo falta colocar os trackers aki!
     }
 
     private void split(int left, int right) {
         if(left >= right)
             return;
 
-        int middle = left + (right-left)/2;
+        int middle = left + (right-left) / 2;
 
         this.split(left, middle);
         this.split(middle+1, right);
@@ -68,11 +67,11 @@ public class Merge<T extends Comparable<? super T>> implements Method<T> {
         this.merge(left, middle, right);
         //update
     }
+
     @Override
     public void sort(CustomList<T> data) {
         final int length = data.getSize();
         this.data = data;
-
         this.split(0, length-1);
     }
 }
