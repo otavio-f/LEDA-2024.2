@@ -106,9 +106,10 @@ public class DynamicQueue<T> implements CustomQueue<T> {
 
         return new Iterator<T>() {
             int index = head;
+            boolean emptied = false;
             @Override
             public boolean hasNext() {
-                return (this.index != tail);
+                return !emptied;
             }
 
             @Override
@@ -119,6 +120,8 @@ public class DynamicQueue<T> implements CustomQueue<T> {
                 this.index++;
                 if(this.index==data.length)
                     this.index = 0;
+                if(this.index == tail)
+                    emptied = true;
                 return result;
             }
         };
