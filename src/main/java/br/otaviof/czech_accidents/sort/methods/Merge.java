@@ -2,18 +2,24 @@ package br.otaviof.czech_accidents.sort.methods;
 
 import br.otaviof.czech_accidents.adt.list.CustomList;
 import br.otaviof.czech_accidents.adt.list.DynamicList;
-import br.otaviof.czech_accidents.adt.queue.CustomQueue;
-import br.otaviof.czech_accidents.adt.queue.DynamicQueue;
+import br.otaviof.czech_accidents.tracker.ProgressTracker;
+import br.otaviof.czech_accidents.tracker.Trackable;
 
 /**
  * Implementação do método de ordenação merge sort
  * @author otavio-f
  */
-public class Merge<T extends Comparable<? super T>> implements Method<T> {
+public class Merge<T extends Comparable<? super T>> implements Method<T>, Trackable {
 
+    private final ProgressTracker progress = new ProgressTracker();
     private CustomList<T> data;
 
     public Merge() {}
+
+    @Override
+    public ProgressTracker getTracker() {
+        return this.progress;
+    }
 
     private void merge(int left, int middle, int right) {
         CustomList<T> leftSide = new DynamicList<>();
@@ -65,12 +71,14 @@ public class Merge<T extends Comparable<? super T>> implements Method<T> {
         this.split(middle+1, right);
 
         this.merge(left, middle, right);
-        //update
+        this.progress.update();
     }
 
     @Override
     public void sort(CustomList<T> data) {
         final int length = data.getSize();
+        this.progress.setTarget(length);
+
         this.data = data;
         this.split(0, length-1);
     }

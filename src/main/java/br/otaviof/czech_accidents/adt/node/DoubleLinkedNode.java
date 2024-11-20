@@ -27,7 +27,7 @@ public final class DoubleLinkedNode<T> extends LinkedNode<T> {
 
     /**
      * Atribui o nodo anterior
-     * @param prev
+     * @param prev nodo anterior
      */
     public void setPrev(DoubleLinkedNode<T> prev) {
         this.prev = prev;

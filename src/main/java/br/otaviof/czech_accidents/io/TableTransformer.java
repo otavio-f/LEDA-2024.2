@@ -3,6 +3,8 @@ package br.otaviof.czech_accidents.io;
 import br.otaviof.czech_accidents.adt.list.CustomList;
 import br.otaviof.czech_accidents.adt.list.DynamicList;
 import br.otaviof.czech_accidents.adt.queue.CustomQueue;
+import br.otaviof.czech_accidents.tracker.ProgressTracker;
+import br.otaviof.czech_accidents.tracker.Trackable;
 
 import java.io.*;
 import java.util.Iterator;
@@ -10,15 +12,10 @@ import java.util.Iterator;
 /**
  * Classe de criação de novas tabelas com base em arquivos antigos
  */
-public class TableTransformer {
+public class TableTransformer implements Trackable {
 
+    private final ProgressTracker progress = new ProgressTracker();
     private final TableOperator operator;
-
-    private void writeLine(BufferedWriter bw, String line) throws IOException {
-        bw.append(line);
-        bw.newLine();
-        bw.flush();
-    }
 
     /**
      * Cria uma nova instância
@@ -30,21 +27,46 @@ public class TableTransformer {
     }
 
     /**
+     * Cria uma nova instância
+     *
+     * @param source base para futuras operações
+     */
+    public TableTransformer(File source) {
+        this.operator = new TableOperator(source);
+    }
+
+    @Override
+    public ProgressTracker getTracker() {
+        return this.progress;
+    }
+
+    /**
+     * Adiciona uma linha no arquivo
+     * @param bw BufferedWriter
+     * @param line linha
+     * @throws IOException se ocorrer erro de escrita
+     */
+    private void writeLine(BufferedWriter bw, String line) throws IOException {
+        bw.append(line);
+        bw.newLine();
+        bw.flush();
+    }
+
+    /**
      * Filtra um arquivo de acordo com um filtro de células aplicado a uma coluna
      *
      * @param output     arquivo de saída
      * @param columnName nome da coluna a ser filtrada
      * @param filter     O filtro de célula
      */
-    public int filter(String output, String columnName, CellFilter filter) throws IOException {
+    public int filter(File output, String columnName, CellFilter filter) throws IOException {
         // initialize write process
-        File out = new File(output);
-        out.delete();
-        FileWriter fw = new FileWriter(out);
+        output.delete();
+        FileWriter fw = new FileWriter(output);
         BufferedWriter bw = new BufferedWriter(fw);
         BufferedReader br = this.operator.getReader();
 
-        //TODO: tracker create
+        this.progress.setTarget(this.operator.countLines());
 
         // write headers
         String line = br.readLine();
@@ -66,7 +88,7 @@ public class TableTransformer {
                 writeLine(bw, line);
                 writtenCount++;
             }
-            // TODO: update tracker
+            this.progress.update();
             line = br.readLine();
         }
 
@@ -80,7 +102,9 @@ public class TableTransformer {
      * @param output O arquivo de saída
      * @param order  A ordem de saída
      */
-    public void reorder(String output, CustomQueue<Integer> order) throws IOException {
+    public void reorder(File output, CustomQueue<Integer> order) throws IOException {
+        this.progress.setTarget(this.operator.countLines());
+
         String headers;
         CustomList<String> allLines = new DynamicList<>();
         try (BufferedReader br = this.operator.getReader()) {
@@ -99,9 +123,8 @@ public class TableTransformer {
         }
 
         // prepare to write lines to file
-        File out = new File(output);
-        out.delete();
-        FileWriter fw = new FileWriter(out);
+        output.delete();
+        FileWriter fw = new FileWriter(output);
         BufferedWriter bw = new BufferedWriter(fw);
 
         // write header
@@ -113,7 +136,7 @@ public class TableTransformer {
         Iterator<Integer> iter = order.getIterator();
         while (iter.hasNext()) {
             writeLine(bw, allLines.getAt(iter.next()));
-            // tracker update
+            this.progress.update();
         }
 
         bw.close();

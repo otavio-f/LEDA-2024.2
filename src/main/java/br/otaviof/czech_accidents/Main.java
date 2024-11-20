@@ -1,5 +1,7 @@
 package br.otaviof.czech_accidents;
 
+import br.otaviof.czech_accidents.transformer.Transformer;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -8,8 +10,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-
-import br.otaviof.czech_accidents.transformer.Transformer;
 
 public class Main {
     private static final Logger logger = Logger.getLogger("Main");
@@ -118,7 +118,7 @@ public class Main {
             logger.severe("Invalid command line arguments.");
             logger.info(String.format("Usage: %s [-i/--input] <input dir> [-o/--output] <output dir>", args[0]));
             return;
-        };
+        }
 
         if(!verifyPaths()) {
             logger.severe("Failed to initialize input/output paths.");
@@ -127,7 +127,6 @@ public class Main {
 
         configLoggerToOutput("Transformer", 1500L);
         configLoggerToOutput("Streamer", 1500L);
-
 
         Transformer.filterByColumn(
             new File(input, "road_accidents_czechia_2016_2022.csv"),
@@ -158,33 +157,36 @@ public class Main {
         );
 
         final File sorterInput = new File(output, "accidents_NCBMV.csv");
+
         final DateTimeFormatter format = DateTimeFormatter.ofPattern("uuuu-MM-dd");
-        Transformer.sortByColumn(
-            sorterInput,
-            output,
-            "accidents_NCBMV_date_%s_medioCaso.csv",
-            "date",
-            (date) -> (LocalDate.parse(date, format)),
-            Transformer.SortOrder.DESCENDING
+        Transformer.sortColumn(
+                LocalDate.class,
+                sorterInput,
+                output,
+                "accidents_NCBMV_date_%s_medioCaso.csv",
+                "date",
+                (date) -> (LocalDate.parse(date, format)),
+                Transformer.SortOrder.DESCENDING
         );
+//
+//        Transformer.sortColumn(
+//                Integer.class,
+//                sorterInput,
+//                output,
+//                "accidents_NCBMV_time_%s_medioCaso.csv",
+//                "time",
+//                (time) -> Double.valueOf(time).intValue(),
+//                Transformer.SortOrder.ASCENDING
+//                );
 
-        Transformer.sortByColumn(
-            sorterInput,
-            output,
-            "accidents_NCBMV_time_%s_medioCaso.csv",
-            "time",
-            (time) -> Double.valueOf(time),
-            Transformer.SortOrder.ASCENDING
+        Transformer.sortColumn(
+                String.class,
+                sorterInput,
+                output,
+                "accidents_NCBMV_communication_kind_%s_medioCaso.csv",
+                "communication_kind",
+                (kind) -> (kind),
+                Transformer.SortOrder.ASCENDING
         );
-
-        Transformer.sortByColumn(
-            sorterInput,
-            output,
-            "accidents_NCBMV_communication_kind_%s_medioCaso.csv",
-            "communication_kind",
-            (kind) -> (kind),
-            Transformer.SortOrder.ASCENDING
-        );
-
     }
 }

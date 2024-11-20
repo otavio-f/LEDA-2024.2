@@ -1,19 +1,24 @@
 package br.otaviof.czech_accidents.sort.methods;
 
 import br.otaviof.czech_accidents.adt.list.CustomList;
-import br.otaviof.czech_accidents.adt.list.DynamicList;
-import br.otaviof.czech_accidents.adt.queue.CustomQueue;
-import br.otaviof.czech_accidents.adt.queue.DynamicQueue;
+import br.otaviof.czech_accidents.tracker.ProgressTracker;
+import br.otaviof.czech_accidents.tracker.Trackable;
 
 /**
  * Implementação do método de ordenação heap sort
  * @author otavio-f
  */
-public class Heap<T extends Comparable<? super T>> implements Method<T> {
+public class Heap<T extends Comparable<? super T>> implements Method<T>, Trackable {
 
+    private final ProgressTracker progress = new ProgressTracker();
     private CustomList<T> data;
 
     public Heap() {}
+
+    @Override
+    public ProgressTracker getTracker() {
+        return this.progress;
+    }
 
     private void maxHeapify(int i, int heapsize) {
         final int l = i * 2 + 1;
@@ -41,6 +46,8 @@ public class Heap<T extends Comparable<? super T>> implements Method<T> {
     @Override
     public void sort(CustomList<T> data) {
         final int length = data.getSize();
+        this.progress.setTarget(length);
+
         this.data = data;
         int heapsize = length - 1;
 
@@ -49,8 +56,8 @@ public class Heap<T extends Comparable<? super T>> implements Method<T> {
             this.data.swap(0, i);
             heapsize--;
             maxHeapify(0, heapsize);
-            // update
+            this.progress.update();
         }
-        // update
+        this.progress.update();
     }
 }

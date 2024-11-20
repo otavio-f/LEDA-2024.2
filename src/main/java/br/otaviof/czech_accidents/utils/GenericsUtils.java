@@ -15,7 +15,7 @@ public final class GenericsUtils {
      * @param <T> O genérico
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Comparable<? super T>> T[] createArrayOfSize(int size) {
+    public static <T extends Comparable<? super T>> T[] createArrayOfSize(int size) { //BUG: sempre retorna Comparable<?>
         return (T[]) new Comparable[size];
     }
 }

@@ -20,7 +20,7 @@ public class LinkedNode<T> {
 
     /**
      * Obtém o dado contido neste nodo
-     * @return
+     * @return o dado
      */
     public T getData() {
         return this.data;
@@ -36,7 +36,7 @@ public class LinkedNode<T> {
 
     /**
      * Atribui o próximo nodo
-     * @param next
+     * @param next o próximo nodo
      */
     public void setNext(LinkedNode<T> next) {
         this.next = next;

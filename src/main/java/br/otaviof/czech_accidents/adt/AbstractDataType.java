@@ -24,6 +24,6 @@ public interface AbstractDataType<T> {
      * A coleção de dados original não será modificada.
      * @return Um array
      */
-    public T[] toArray();
+    T[] toArray();
 
 }

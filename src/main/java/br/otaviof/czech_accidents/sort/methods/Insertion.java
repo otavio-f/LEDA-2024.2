@@ -1,18 +1,27 @@
 package br.otaviof.czech_accidents.sort.methods;
 
 import br.otaviof.czech_accidents.adt.list.CustomList;
+import br.otaviof.czech_accidents.tracker.ProgressTracker;
+import br.otaviof.czech_accidents.tracker.Trackable;
 
 /**
  * Implementação do método de ordenação insertion sort
  * @author otavio-f
  */
-public class Insertion<T extends Comparable<? super T>> implements Method<T> {
+public class Insertion<T extends Comparable<? super T>> implements Method<T>, Trackable {
+    private final ProgressTracker progress = new ProgressTracker();
 
     public Insertion() {}
 
     @Override
+    public ProgressTracker getTracker() {
+        return this.progress;
+    }
+
+    @Override
     public void sort(CustomList<T> data) {
         final int length = data.getSize();
+        this.progress.setTarget(length);
 
         for(int i=1; i<length; i++) {
             T key = data.getAt(i);
@@ -23,8 +32,8 @@ public class Insertion<T extends Comparable<? super T>> implements Method<T> {
                 j--;
             }
             data.replace(j+1, key);
-            // update
+            this.progress.update();
         }
-        // update
+        this.progress.update();
     }
 }

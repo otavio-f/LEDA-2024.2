@@ -30,9 +30,28 @@ public class TableOperator {
     protected TableOperator(String file) {
         this.input = new File(file);
     }
+    protected TableOperator(File file) {
+        this.input = file;
+    }
 
     protected CustomList<String> getHeaders() {
         return this.headers;
+    }
+
+    /**
+     * Conta a quantidade de linhas
+     * @return I
+     * @throws IOException Se ocorrer erro de leitura de arquivo
+     */
+    protected int countLines() throws IOException {
+        BufferedReader br = getReader();
+
+        int count = -1;
+        while(br.readLine() != null)
+            count++;
+        br.close();
+
+        return count;
     }
 
     /**

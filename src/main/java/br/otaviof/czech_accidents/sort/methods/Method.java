@@ -1,7 +1,6 @@
 package br.otaviof.czech_accidents.sort.methods;
 
 import br.otaviof.czech_accidents.adt.list.CustomList;
-import br.otaviof.czech_accidents.adt.queue.CustomQueue;
 
 /**
  * Interface comum a todos métodos de ordenação

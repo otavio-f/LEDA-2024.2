@@ -6,6 +6,8 @@ import br.otaviof.czech_accidents.adt.queue.CustomQueue;
 import br.otaviof.czech_accidents.adt.queue.DynamicQueue;
 import br.otaviof.czech_accidents.adt.stack.CustomStack;
 import br.otaviof.czech_accidents.adt.stack.DynamicStack;
+import br.otaviof.czech_accidents.tracker.ProgressTracker;
+import br.otaviof.czech_accidents.tracker.Trackable;
 
 import java.util.Iterator;
 
@@ -13,17 +15,24 @@ import java.util.Iterator;
  * Implementação do método de ordenação counting sort
  * @author otavio-f
  */
-public class Counting { // Classe não mistura com outras
+public class Counting implements Trackable { // Classe não mistura com outras
+    private final ProgressTracker progress = new ProgressTracker();
     public Counting() {}
 
+    public ProgressTracker getTracker() {
+        return this.progress;
+    }
+
     public CustomQueue<Integer> sort(CustomList<Integer> data) {
-        final int max = data.maximum() + 1;
         final int length = data.getSize();
+        this.progress.setTarget(length);
+
+        final int max = data.maximum() + 1;
 
         // O custo de insercao em lista dinamica eh maior, mas compensado pelo custo de busca
         // insercao O(log(n)) lista dinamica vs. O(n) em lista encadeada, O(1) em lista duplamente encadeada
         // busca O(1) em lista dinamica vs. O(n) em lista encadeada.
-        CustomList<Integer> aux = new DynamicList<>();//dynamic list pq
+        CustomList<Integer> aux = new DynamicList<>();
         for(int i=0; i<max; i++) {
             aux.append(0);
         }
@@ -47,6 +56,7 @@ public class Counting { // Classe não mistura com outras
             Integer item = data.getAt(i);
             aux.replace(item, aux.getAt(item)-1);
             result.push(aux.getAt(item));
+            this.progress.update();
         }
 
         return new DynamicQueue<>(result); // conversao de pilha -> fila inverte ordem

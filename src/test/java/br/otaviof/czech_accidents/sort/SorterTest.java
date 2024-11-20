@@ -5,10 +5,7 @@ import br.otaviof.czech_accidents.adt.list.DynamicList;
 import br.otaviof.czech_accidents.adt.queue.CustomQueue;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 // ordem estável: { 0, 4, 2, 3, 1, 5 }
 // ordem não estável: { 0, 4, 2, 3, 5, 1 }
@@ -24,7 +21,7 @@ public class SorterTest {
         sample.append(2);
         sample.append(5);
 
-        CustomQueue<Integer> result = Sorter.countingSort(sample);
+        CustomQueue<Integer> result = Sorter.countingSort(sample, null);
 
         assertArrayEquals(new Integer[] { 0, 4, 2, 3, 1, 5 }, result.toArray());
     }
@@ -40,7 +37,7 @@ public class SorterTest {
         sample.append(2);
         sample.append(5);
 
-        CustomQueue<Integer> result = Sorter.heapSort(sample);
+        CustomQueue<Integer> result = Sorter.heapSort(sample, null);
         assertArrayEquals(new Integer[] { 0, 4, 2, 3, 5, 1 }, result.toArray());
     }
 
@@ -54,7 +51,7 @@ public class SorterTest {
         sample.append(2);
         sample.append(5);
 
-        CustomQueue<Integer> result = Sorter.insertionSort(sample);
+        CustomQueue<Integer> result = Sorter.insertionSort(sample, null);
         assertArrayEquals(new Integer[] { 0, 4, 2, 3, 1, 5 }, result.toArray());
     }
 
@@ -68,7 +65,7 @@ public class SorterTest {
         sample.append(2);
         sample.append(5);
 
-        CustomQueue<Integer> result = Sorter.mergeSort(sample);
+        CustomQueue<Integer> result = Sorter.mergeSort(sample, null);
         assertArrayEquals(new Integer[] { 0, 4, 2, 3, 1, 5 }, result.toArray());
     }
 
@@ -82,7 +79,7 @@ public class SorterTest {
         sample.append(2);
         sample.append(5);
 
-        CustomQueue<Integer> result = Sorter.quickSort(sample);
+        CustomQueue<Integer> result = Sorter.quickSort(sample, null);
         assertArrayEquals(new Integer[] { 0, 4, 2, 3, 1, 5 }, result.toArray());
     }
 
@@ -96,7 +93,7 @@ public class SorterTest {
         sample.append(2);
         sample.append(5);
 
-        CustomQueue<Integer> result = Sorter.quick3MedianSort(sample);
+        CustomQueue<Integer> result = Sorter.quick3MedianSort(sample, null);
         assertArrayEquals(new Integer[] { 0, 4, 2, 3, 5, 1 }, result.toArray());
     }
 
@@ -111,7 +108,7 @@ public class SorterTest {
         sample.append(2);
         sample.append(5);
 
-        CustomQueue<Integer> result = Sorter.selectionSort(sample);
+        CustomQueue<Integer> result = Sorter.selectionSort(sample, null);
         assertArrayEquals(new Integer[] { 0, 4, 2, 3, 1, 5 }, result.toArray());
     }
 }

@@ -1,11 +1,14 @@
 package br.otaviof.czech_accidents.transformer;
 
-import br.otaviof.czech_accidents.io.Streamer;
-import br.otaviof.czech_accidents.sorters.*;
+import br.otaviof.czech_accidents.adt.list.CustomList;
+import br.otaviof.czech_accidents.adt.queue.CustomQueue;
+import br.otaviof.czech_accidents.adt.queue.DynamicQueue;
+import br.otaviof.czech_accidents.adt.stack.DynamicStack;
+import br.otaviof.czech_accidents.io.*;
+import br.otaviof.czech_accidents.sort.Sorter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class Transformer {
@@ -16,31 +19,6 @@ public class Transformer {
     }
 
     /**
-     * Define uma interface funcional para criar um método de ordenação
-     * @param <T> Um tipo comparável para ser ordenado
-     */
-    private interface SorterCreator<T extends Comparable<? super T>> {
-        /**
-         * Cria um método de ordenação sobre com um array
-         * @param arr Um array de elementos ordenáveis
-         * @return Um método de ordenação
-         */
-        public SortMethod<T> create(T[] arr);
-    }
-
-    public static Thread filterAsync(File input, File output, String column, Streamer.Filter filter) throws IOException {
-        Thread thread = new Thread(()->{
-            try {
-                Transformer.filterByColumn(input, output, column, filter);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        thread.start();
-        return thread;
-    }
-
-    /**
      * Aplica um filtro sobre uma coluna de um arquivo separado por vírgulas
      * @param input O arquivo de entrada
      * @param output O arquivo de saída
@@ -48,178 +26,159 @@ public class Transformer {
      * @param filter O filtro a ser aplicado sobre a coluna
      * @throws IOException Se ocorrer algum erro na leitura ou escrita do arquivo
      */
-    public static void filterByColumn(File input, File output, String column, Streamer.Filter filter) throws IOException {
+    public static void filterByColumn(File input, File output, String column, CellFilter filter) throws IOException {
         logger.info(String.format("Reading file \"%s\"", input));
-        final Streamer st = new Streamer(input);
-        logger.info(String.format("Found %d lines and %d columns", st.lineCount, st.columnCount));
-        final int writtenLines = st.filterToFile(
+        final TableTransformer tt = new TableTransformer(input);
+        tt.getTracker().setAction((p) -> {logger.fine(String.format("Writing progress: %.2f %%", 100*p));});
+
+        final int writtenLines = tt.filter(
             output,
             column,
-            filter,
-            (p) -> {logger.fine(String.format("Writing progress: %.2f %%", 100*p));}
+            filter
         );
 
         logger.info(String.format("Done. Written %d lines", writtenLines));
     }
 
     /**
-     * Inverte a ordem de um array de ordenação
-     * @param order Um array de ordenação que indica a posição de elementos
+     * Ordena um arquivo por uma coluna
+     * @param clazz A classe da coluna a ser ordenada
+     * @param input O arquivo de entrada
+     * @param outputDir O diretório de saída
+     * @param outputExp A expressão que determina o nome do arquivo de saída
+     * @param columnName O nome da coluna
+     * @param converter Conversor de tipo da coluna
+     * @param order Ordem, crescente ou decrescente
+     * @param <T> Tipo genérico da coluna
+     * @throws IOException Se ocorrer algum erro de leitura
      */
-    private static void reverseOrder(int[] order) {
-        int temp;
-        for(int i=0; i<order.length/2; i++) {
-            temp = order[i];
-            order[i] = order[order.length - i - 1];
-            order[order.length - i - 1] = temp;
-        }
-    }
+    public static <T extends Comparable<? super T>> void sortColumn(Class<T> clazz,
+                                                                      File input,
+                                                                      File outputDir,
+                                                                      String outputExp,
+                                                                      String columnName,
+                                                                      CellConverter<T> converter,
+                                                                      SortOrder order) throws IOException {
 
-    /**
-     * Aplica um método de ordenação sobre um array
-     * @param creator Um criador de métodos de ordenação
-     * @param st O leitor de arquivos
-     * @param originalData O conjunto de dados
-     * @param output O arquivo de destino
-     * @param order Ordem de ordenação, crescente ou decrescente
-     * @param <T> Uma classe comparável
-     * @throws IOException Se ocorrer erro de leitura ou escrita de arquivo
-     */
-    private static <T extends Comparable<? super T>> void applySort(SorterCreator<T> creator, Streamer st, T[] originalData, File output, SortOrder order) throws IOException {
-        System.gc();
-        T[] data = Arrays.copyOf(originalData, originalData.length);
-        SortMethod<T> sortingMethod = creator.create(data);
-        sortingMethod.setProgressTracker((p) -> {
-            logger.fine(String.format("Sorting progress: %.2f %%", 100*p));
-        });
-        long time = System.currentTimeMillis();
-        int[] newOrder = sortingMethod.sort();
-        if(order == SortOrder.DESCENDING)
-            reverseOrder(newOrder);
-        time = System.currentTimeMillis()-time;
-        logger.info(String.format("Sorted in %d ms", time));
-        st.writeReordered(output, newOrder, (p) -> {
-            logger.fine(String.format("Writing progress: %.2f %%", 100*p));
-        });
-    }
-
-    /**
-     * Ordena um arquivo csv por uma coluna usando diferentes métodos de ordenação
-     *
-     * @param input O arquivo csv
-     * @param outputDir A pasta de saída
-     * @param outputExp A expressão que define o nome do arquivo
-     * @param column A coluna pela qual o arquivo vai ser ordenado
-     * @param converter Um conversor de tipos
-     * @param order A ordem de ordenação, crescente ou decrescente
-     * @param <T> Um tipo comparável
-     * @throws IOException Se ocorrer erro de leitura ou escrita
-     */
-    public static <T extends Comparable<? super T>> void sortByColumn(File input, File outputDir, String outputExp, String column, Streamer.Converter<T> converter, Transformer.SortOrder order) throws IOException {
         logger.info(String.format("Reading file \"%s\"", input));
 
-        Streamer st = new Streamer(input);
-        T[] data = st.getColumn(column, converter, (p) -> {
-            logger.fine(String.format("Reading progress: %.2f %%", 100*p));
+        // Read table
+        final TableReader tr = new TableReader(input);
+        tr.getTracker().setAction((p) -> {
+            logger.fine(String.format("Reading: %.2f %%", 100*p));
         });
 
-//        logger.info("Counting-Sort");
-//        applySort(
-//                (arr)-> new CountingSort(arr), st, data, String.format(outputExp, "countingSort"),
-//                order);
-                // BUG: Fails to cast Sorter<Integer> to Sorter<T>, even if T is Integer
+        final CustomList<T> data = tr.getColumnAs(columnName, converter);
+        logger.info(String.format("OK. Read %d lines.", data.getSize()));
 
-        /*
-        Heap-Sort
-         * Medium case: random order
-         * Worst case: same as medium case
-         * Best case: array of 1 element (won't do!)
-         */
-        logger.info("Heap-Sort");
-        applySort(
-            (arr)->(new HeapSort<T>(arr)),
-            st,
-            data,
-            new File(outputDir, String.format(outputExp, "heapSort")),
-            order);
+        // Prepare table writer
+        final TableTransformer tt = new TableTransformer(input);
+        tt.getTracker().setAction((p) -> {
+            logger.fine(String.format("Writing progress: %.2f %%", 100*p));
+        });
+        CustomQueue<Integer> newOrder;
 
-        /*
-        Insertion-Sort
-         * Medium-case: random order
-         * Worst case: descending order
-         * Best case: ascending order
-         */
-        logger.info("Insertion-Sort");
-        applySort(
-            (arr)->(new InsertionSort<T>(arr)),
-            st,
-            data,
-            new File(outputDir, String.format(outputExp, "insertionSort")),
-            order);
+        // Prepare timer
+        long time;
 
-        /*
-        Merge-Sort
-         * Medium case: random order
-         * Worst case: alternate elements (won't do!)
-         * Best case: any order
-         */
-        logger.info("Merge-Sort");
-        applySort(
-            (arr)->(new MergeSort<T>(arr)),
-            st,
-            data,
-            new File(outputDir, String.format(outputExp, "mergeSort")),
-            order);
 
-        /*
-        Quick-Sort:
-         * Medium case: random order
-         * Worst case: pivot is the min (ascending/descending order)
-         * Best case: pivot is always mean (how?)
-         */
-        try {
-            logger.info("Quick-Sort");
-            applySort(
-                (arr)->(new QuickSort<T>(arr)),
-                st,
-                data,
-                new File(outputDir, String.format(outputExp, "quickSort")),
-                order);
-        } catch (StackOverflowError e) {
-            logger.warning("Quick-Sort died!");
+        // COUNTING-SORT
+        if(clazz == Integer.class) {
+            logger.info("***Counting-Sort***");
+            time = System.currentTimeMillis();
+            newOrder = Sorter.countingSort((CustomList<Integer>) data, (p) -> {
+                logger.fine(String.format("Sorting progress: %.2f %%", 100*p));
+            });
+            time = System.currentTimeMillis()-time;
+            logger.info(String.format("Counting-Sort took %d ms.", time));
+
+            if(order == SortOrder.DESCENDING)
+                newOrder = new DynamicQueue<>(new DynamicStack<>(newOrder)); // queue->stack->queue inverte ordem
+            tt.reorder(new File(outputDir, String.format(outputExp, "countingSort")), newOrder);
         }
 
-        /*
-        Quick-Sort Median of 3:
-         * Medium case: random order
-         * Worst case: ?
-         * Best case: pivot is always mean (how?)
-         */
-        try {
-            logger.info("Quick-Sort, median of 3");
-            applySort(
-                (arr)->(new QuickSortMedianThree<>(arr)),
-                st,
-                data,
-                new File(outputDir, String.format(outputExp, "quickSortMedianOf3")),
-                order);
-        } catch (StackOverflowError e) {
-            logger.warning("Quick-Sort median of 3 died!");
-        }
 
-        /*
-        Selection-Sort
-         * Medium case: random order
-         * Worst case: descending order
-         * Best case: ascending order
-         */
-        logger.info("Selection-Sort");
-        applySort(
-            (arr)->(new SelectionSort<T>(arr)),
-            st,
-            data,
-            new File(outputDir, String.format(outputExp, "selectionSort")),
-            order);
+        // HEAP-SORT
+        logger.info("***Heap-Sort***");
+        time = System.currentTimeMillis();
+        newOrder = Sorter.heapSort(data, (p) -> {
+            logger.fine(String.format("Sorting progress: %.2f %%", 100*p));
+        });
+        time = System.currentTimeMillis()-time;
+        logger.info(String.format("Heap-Sort took %d ms.", time));
 
+        if(order == SortOrder.DESCENDING)
+            newOrder = new DynamicQueue<>(new DynamicStack<>(newOrder)); // queue->stack->queue inverte ordem
+        tt.reorder(new File(outputDir, String.format(outputExp, "heapSort")), newOrder);
+
+
+        // INSERTION-SORT
+        logger.info("***Insertion-Sort***");
+        time = System.currentTimeMillis();
+        newOrder = Sorter.insertionSort(data, (p) -> {
+            logger.fine(String.format("Sorting progress: %.2f %%", 100*p));
+        });
+        time = System.currentTimeMillis()-time;
+        logger.info(String.format("Insertion-Sort took %d ms.", time));
+
+        if(order == SortOrder.DESCENDING)
+            newOrder = new DynamicQueue<>(new DynamicStack<>(newOrder)); // queue->stack->queue inverte ordem
+        tt.reorder(new File(outputDir, String.format(outputExp, "insertionSort")), newOrder);
+
+
+        // MERGE-SORT
+        logger.info("***Merge-Sort***");
+        time = System.currentTimeMillis();
+        newOrder = Sorter.mergeSort(data, (p) -> {
+            logger.fine(String.format("Sorting progress: %.2f %%", 100*p));
+        });
+        time = System.currentTimeMillis()-time;
+        logger.info(String.format("Merge-Sort took %d ms.", time));
+
+        if(order == SortOrder.DESCENDING)
+            newOrder = new DynamicQueue<>(new DynamicStack<>(newOrder)); // queue->stack->queue inverte ordem
+        tt.reorder(new File(outputDir, String.format(outputExp, "mergeSort")), newOrder);
+
+
+        // QUICK-SORT
+        logger.info("***Quick-Sort***");
+        time = System.currentTimeMillis();
+        newOrder = Sorter.quickSort(data, (p) -> {
+            logger.fine(String.format("Sorting progress: %.2f %%", 100*p));
+        });
+        time = System.currentTimeMillis()-time;
+        logger.info(String.format("Quick-Sort took %d ms.", time));
+
+        if(order == SortOrder.DESCENDING)
+            newOrder = new DynamicQueue<>(new DynamicStack<>(newOrder)); // queue->stack->queue inverte ordem
+        tt.reorder(new File(outputDir, String.format(outputExp, "quickSort")), newOrder);
+
+
+        // QUICK-SORT (MEDIAN OF 3)
+        logger.info("***Quick-Sort (Median of 3)***");
+        time = System.currentTimeMillis();
+        newOrder = Sorter.quick3MedianSort(data, (p) -> {
+            logger.fine(String.format("Sorting progress: %.2f %%", 100*p));
+        });
+        time = System.currentTimeMillis()-time;
+        logger.info(String.format("Quick-Sort (Median of 3) took %d ms.", time));
+
+        if(order == SortOrder.DESCENDING)
+            newOrder = new DynamicQueue<>(new DynamicStack<>(newOrder)); // queue->stack->queue inverte ordem
+        tt.reorder(new File(outputDir, String.format(outputExp, "quickSortMedianOf3")), newOrder);
+
+
+        // SELECTION-SORT
+        logger.info("***Selection-Sort***");
+        time = System.currentTimeMillis();
+        newOrder = Sorter.selectionSort(data, (p) -> {
+            logger.fine(String.format("Sorting progress: %.2f %%", 100*p));
+        });
+        time = System.currentTimeMillis()-time;
+        logger.info(String.format("Selection-Sort took %d ms.", time));
+
+        if(order == SortOrder.DESCENDING)
+            newOrder = new DynamicQueue<>(new DynamicStack<>(newOrder)); // queue->stack->queue inverte ordem
+        tt.reorder(new File(outputDir, String.format(outputExp, "selectionSort")), newOrder);
     }
 }

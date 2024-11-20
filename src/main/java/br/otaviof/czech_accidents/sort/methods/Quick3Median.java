@@ -1,23 +1,30 @@
 package br.otaviof.czech_accidents.sort.methods;
 
 import br.otaviof.czech_accidents.adt.list.CustomList;
-import br.otaviof.czech_accidents.adt.queue.CustomQueue;
+import br.otaviof.czech_accidents.tracker.ProgressTracker;
+import br.otaviof.czech_accidents.tracker.Trackable;
 
 /**
  * Implementação do método de ordenação quick sort com mediana de 3
  * @author otavio-f
  */
-public class Quick3Median<T extends Comparable<? super T>> implements Method<T> {
+public class Quick3Median<T extends Comparable<? super T>> implements Method<T>, Trackable {
+    private final ProgressTracker progress = new ProgressTracker();
     private CustomList<T> data;
 
     public Quick3Median() {}
+
+    @Override
+    public ProgressTracker getTracker() {
+        return this.progress;
+    }
 
     /**
      * Calcula o termo mediano entre três termos contidos nos índices
      * @param a O primeiro índice
      * @param b O segundo índice
      * @param c O terceiro índice
-     * @return O termo mediano, o segundo maior dos três
+     * @return O termo mediano
      */
     private int medianOf3(int a, int b, int c) {
         if((this.data.compare(a, b) > 0) ^ (this.data.compare(a, c) > 0)) // ^ == xor
@@ -50,13 +57,31 @@ public class Quick3Median<T extends Comparable<? super T>> implements Method<T> 
         int q = partition(p, r);
         quicksort(p, q-1);
         quicksort(q+1, r);
-        // update
+        this.progress.update();
+    }
+
+    // quicksort normal dá stackoverflow com arrays largos
+    // https://stackoverflow.com/questions/33884057/quick-sort-stackoverflow-error-for-large-arrays
+    // iteração na partição menor e recursão na partição maior
+    private void quicksortMix(int p, int r) {
+        while(p<r) {
+            int q = partition(p, r);
+            if (q-p <= r-(q+1)) {
+                quicksortMix(p, q-1);
+                p=q+1;
+            } else {
+                quicksortMix(q+1, r);
+                r=q-1;
+            }
+        }
+        this.progress.update();
     }
 
     @Override
     public void sort(CustomList<T> data) {
         final int length = data.getSize();
+        this.progress.setTarget(length);
         this.data = data;
-        quicksort(0, length-1);
+        quicksortMix(0, length-1);
     }
 }

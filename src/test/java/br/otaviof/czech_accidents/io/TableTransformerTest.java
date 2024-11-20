@@ -5,6 +5,7 @@ import br.otaviof.czech_accidents.adt.queue.CustomQueue;
 import br.otaviof.czech_accidents.adt.queue.LinkedQueue;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +22,7 @@ class TableTransformerTest {
     @Test
     void filterTest() throws IOException {
         TableTransformer tt = new TableTransformer("src/test/resources/rtest.csv");
-        int writtenLines = tt.filter("src/test/resources/wftest.csv", "age", (a) -> (Integer.parseInt(a) >= 18));
+        int writtenLines = tt.filter(new File("src/test/resources/wftest.csv"), "age", (a) -> (Integer.parseInt(a) >= 18));
         assertEquals(5, writtenLines);
 
 
@@ -48,7 +49,7 @@ class TableTransformerTest {
         order.enqueue(7);
         order.enqueue(8);
 
-        tt.reorder("src/test/resources/wrtest.csv", order);
+        tt.reorder(new File("src/test/resources/wrtest.csv"), order);
 
         TableReader tr = new TableReader("src/test/resources/wrtest.csv");
         CustomList<Integer> ids = tr.getColumnAs("id", (i) -> Integer.parseInt(i));
