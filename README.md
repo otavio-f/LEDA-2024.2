@@ -22,7 +22,5 @@ Forma 3:
 * Copie o caminho da pasta que vai conter os arquivos csv de saída;
 * Execute o arquivo jar na linha de comando:
 
-`java -jar czech_road_accidents-1.0-0.jar *pasta de entrada* *pasta de saída*`
+`java -jar czech_road_accidents-2.0-0.jar *pasta de entrada* *pasta de saída*`
 
-
-Recomendado usar -Xmx2000M
