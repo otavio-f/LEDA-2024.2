@@ -113,6 +113,7 @@ public class Main {
                 long time = System.currentTimeMillis();
                 if(time-prevTime < delay) // avoid spamming debug messages
                     return;
+
                 System.out.printf("<%s> - %s\n", logRecord.getLoggerName(), logRecord.getMessage());
                 prevTime = time;
                 prevMessage = logRecord.getMessage();
@@ -150,7 +151,6 @@ public class Main {
 
         // configure output loggers
         configLoggerToOutput("Transformer", 1500L);
-        // configLoggerToOutput("Streamer", 1500L);
 
         // Transformação 1
         // Filtre arquivo de acidentes pela coluna 'alcohol', somente nas entradas em que houve consumo de alclo
