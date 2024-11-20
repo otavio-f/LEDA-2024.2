@@ -16,6 +16,11 @@ public class Main {
     private static File output;
     private static File input;
 
+    /**
+     * Encontra os argumentos para o programa e acha as pastas de entrada e saída
+     * @param args Os argumentos da linha de comando
+     * @return true se os argumentos foram encontrados, senão false
+     */
     private static boolean parseCmdLine(String[] args) {
         if (args.length == 4) {
             // {"-i"/"--input", <input>, "-o"/"--output", <output>}
@@ -50,6 +55,12 @@ public class Main {
         return false;
     }
 
+    /**
+     * Verifica se as pastas são válidas.
+     * As pastas de entrada devem conter os arquivos necessários com permissão de leitura.
+     * As pastas de saída devem ter permissão de escrita.
+     * @return true se as pastas são válidas, senão false
+     */
     private static boolean verifyPaths() {
         final File accidents = new File(input, "road_accidents_czechia_2016_2022.csv");
         if(!accidents.canRead()) {
@@ -78,6 +89,11 @@ public class Main {
         return true;
     }
 
+    /**
+     * Configura a saída das mensagens de aviso.
+     * @param name O nome do logger principal
+     * @param delay O período de tempo entre mensagens.
+     */
     private static void configLoggerToOutput(String name, long delay) {
         Logger log = Logger.getLogger(name);
         log.setLevel(Level.FINE);
@@ -113,21 +129,31 @@ public class Main {
         });
     }
 
+    /**
+     * Método principal
+     * @param args Argumentos do programa
+     * @throws IOException Se ocorrer erro de leitura ou escrita
+     */
     public static void main(String[] args) throws IOException {
+        // find input and output folders
         if(!parseCmdLine(args)) {
             logger.severe("Invalid command line arguments.");
             logger.info(String.format("Usage: %s [-i/--input] <input dir> [-o/--output] <output dir>", args[0]));
             return;
         }
 
+        // validate input and output folders
         if(!verifyPaths()) {
             logger.severe("Failed to initialize input/output paths.");
             return;
         }
 
+        // configure output loggers
         configLoggerToOutput("Transformer", 1500L);
-        configLoggerToOutput("Streamer", 1500L);
+        // configLoggerToOutput("Streamer", 1500L);
 
+        // Transformação 1
+        // Filtre arquivo de acidentes pela coluna 'alcohol', somente nas entradas em que houve consumo de alclo
         Transformer.filterByColumn(
             new File(input, "road_accidents_czechia_2016_2022.csv"),
             new File(output, "alcohol_accidents.csv"),
@@ -135,6 +161,9 @@ public class Main {
             (item) -> (item.contains("yes"))
         );
 
+        // Transformação 2
+        // Filtre arquivo de acidentes pela coluna 'crash_kind', somente nas entradas em que não houve colisão
+        //     entre veículos.
         Transformer.filterByColumn(
             new File(input, "road_accidents_czechia_2016_2022.csv"),
             new File(output, "accidents_NCBMV.csv"),
@@ -142,6 +171,8 @@ public class Main {
             (item) -> (item.equals("not an option It is not a collision between moving vehicles"))
         );
 
+        // Transformação 3
+        // Filtre arquivo de acidentes da transformação 2, somente nos acidentes em que houve colisão com animais.
         Transformer.filterByColumn(
             new File(output, "accidents_NCBMV.csv"),
             new File(output, "accidents_CWFA.csv"),
@@ -149,6 +180,8 @@ public class Main {
             (item) -> (item.equals("collision with forest animals"))
         );
 
+        // Transformação 4
+        // Filtre arquivo de pedestres, somente nos casos em que houve consumo de álcool.
         Transformer.filterByColumn(
             new File(input, "pedestrian.csv"),
             new File(output, "drunk_pedestrians.csv"),
@@ -156,8 +189,11 @@ public class Main {
             (item) -> (item.contains("alcohol"))
         );
 
+        // Ordenações sobre o arquivo da 2a transformação
         final File sorterInput = new File(output, "accidents_NCBMV.csv");
 
+        // Ordenação 1:
+        // Pela data do acidente em ordem decrescente.
         final DateTimeFormatter format = DateTimeFormatter.ofPattern("uuuu-MM-dd");
         Transformer.sortColumn(
                 LocalDate.class,
@@ -168,17 +204,21 @@ public class Main {
                 (date) -> (LocalDate.parse(date, format)),
                 Transformer.SortOrder.DESCENDING
         );
-//
-//        Transformer.sortColumn(
-//                Integer.class,
-//                sorterInput,
-//                output,
-//                "accidents_NCBMV_time_%s_medioCaso.csv",
-//                "time",
-//                (time) -> Double.valueOf(time).intValue(),
-//                Transformer.SortOrder.ASCENDING
-//                );
 
+        // Ordenação 2:
+        // Ordenação pela coluna time em ordem crescente.
+        Transformer.sortColumn(
+                Integer.class,
+                sorterInput,
+                output,
+                "accidents_NCBMV_time_%s_medioCaso.csv",
+                "time",
+                (time) -> Double.valueOf(time).intValue(),
+                Transformer.SortOrder.ASCENDING
+                );
+
+        // Ordenação 3:
+        // Ordenação pelo tipo de comunicação em ordem alfabética crescente;
         Transformer.sortColumn(
                 String.class,
                 sorterInput,
