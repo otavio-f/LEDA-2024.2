@@ -1,5 +1,5 @@
 
-[Relatório](https://github.com/otavio-f/LEDA-2024.2/blob/master/LEDA%20DOC.pdf)
+[Relatório](https://github.com/otavio-f/LEDA-2024.2/blob/data-structures/LEDA%20DOC.pdf)
 
 Para rodar o projeto
 
